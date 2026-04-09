@@ -1,0 +1,330 @@
+/* =============================================
+   FORGE LOADER — Norse Mythology Cinematic Loader
+   ============================================= */
+
+/* Full-screen overlay with perspective depth */
+#forge-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, #02030a 0%, #000000 100%);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    perspective: 900px;
+}
+
+/* ----- LIGHTNING CANVAS ----- */
+#lightning-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ----- VOLUMETRIC FOG ----- */
+.fog-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.fog-layer::before,
+.fog-layer::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    border-radius: 50%;
+    filter: blur(80px);
+    will-change: transform;
+}
+
+.fog-layer::before {
+    background: radial-gradient(ellipse at 30% 50%, rgba(2, 21, 38, 0.6) 0%, transparent 60%);
+    animation: fogDrift1 12s ease-in-out infinite;
+}
+
+.fog-layer::after {
+    background: radial-gradient(ellipse at 70% 40%, rgba(0, 234, 255, 0.03) 0%, rgba(2, 21, 38, 0.4) 40%, transparent 65%);
+    animation: fogDrift2 15s ease-in-out infinite;
+}
+
+@keyframes fogDrift1 {
+    0%, 100% { transform: translate(-5%, 3%) scale(1); }
+    50% { transform: translate(5%, -3%) scale(1.05); }
+}
+
+@keyframes fogDrift2 {
+    0%, 100% { transform: translate(4%, -2%) scale(1.05); }
+    50% { transform: translate(-6%, 4%) scale(1); }
+}
+
+/* =========================================
+   HAMMER CONTAINER — Single parent anchor
+   ========================================= */
+.hammer-container {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transform-style: preserve-3d;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* ----- HAMMER IMAGE ----- */
+.mjolnir {
+    height: 240px;
+    position: relative;
+    z-index: 5;
+    transform-origin: center;
+    filter:
+        drop-shadow(0 0 40px rgba(0, 234, 255, 0.5))
+        drop-shadow(0 0 80px rgba(0, 234, 255, 0.25));
+    will-change: filter;
+}
+
+/* ----- RUNE RING (inside hammer-container) ----- */
+.rune-ring {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 3;
+    pointer-events: none;
+    animation: rotateRuneRing 7s linear infinite;
+}
+
+.rune-ring .rune {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #00eaff;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 20px;
+    text-shadow: 0 0 10px #00eaff, 0 0 25px rgba(0, 234, 255, 0.4);
+    transform-origin: 0 0;
+    will-change: transform, opacity;
+    animation: runePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes rotateRuneRing {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes runePulse {
+    0%, 100% { opacity: 0.5; text-shadow: 0 0 10px #00eaff, 0 0 25px rgba(0,234,255,0.3); }
+    50% { opacity: 1; text-shadow: 0 0 18px #00eaff, 0 0 40px rgba(0,234,255,0.7); }
+}
+
+
+
+
+/* ----- SHOCKWAVE RINGS (anchored to core position) ----- */
+.shockwave-ring {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(0, 234, 255, 0.8);
+    border-radius: 50%;
+    z-index: 7;
+    pointer-events: none;
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.shockwave-ring.active {
+    animation: shockwaveExpand 0.7s ease-out forwards;
+}
+
+@keyframes shockwaveExpand {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+        border-color: rgba(0, 234, 255, 0.9);
+    }
+    40% {
+        border-color: rgba(0, 234, 255, 0.5);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(18);
+        opacity: 0;
+        border-color: rgba(0, 234, 255, 0);
+    }
+}
+
+/* ----- CYAN FLASH ----- */
+.flash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #00eaff;
+    opacity: 0;
+    z-index: 8;
+    pointer-events: none;
+    will-change: opacity;
+}
+
+.flash-screen.active {
+    animation: flashBoom 0.35s ease-out forwards;
+}
+
+@keyframes flashBoom {
+    0% { opacity: 0; }
+    15% { opacity: 0.95; }
+    40% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+/* ----- CAMERA SHAKE ----- */
+@keyframes cameraShake {
+    0% { transform: translate(0, 0); }
+    10% { transform: translate(-5px, 4px); }
+    20% { transform: translate(6px, -5px); }
+    30% { transform: translate(-4px, 6px); }
+    40% { transform: translate(5px, -3px); }
+    50% { transform: translate(-6px, 4px); }
+    60% { transform: translate(4px, -6px); }
+    70% { transform: translate(-5px, 5px); }
+    80% { transform: translate(6px, -4px); }
+    90% { transform: translate(-4px, 3px); }
+    100% { transform: translate(0, 0); }
+}
+
+#forge-loader.shake {
+    animation: cameraShake 0.4s ease-out;
+}
+
+/* ----- HAMMER STRIKE ROTATION ----- */
+@keyframes hammerStrike {
+    0% { transform: rotate(-12deg); }
+    60% { transform: rotate(2deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.mjolnir.striking {
+    animation: hammerStrike 0.35s ease-out forwards;
+}
+
+/* ----- GOLDEN MIST PARTICLES ----- */
+.golden-mist-container {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.golden-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: goldenFloat 2.5s ease-out forwards;
+}
+
+@keyframes goldenFloat {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+    }
+    15% {
+        opacity: 1;
+    }
+    60% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-200px) scale(0.2);
+    }
+}
+
+/* ----- LOADER FADE OUT ----- */
+#forge-loader.fade-out {
+    transition: opacity 0.8s ease-out;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ----- HERO REVEAL ----- */
+#hero {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+}
+
+#hero.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ----- RESPONSIVE ----- */
+@media (max-width: 768px) {
+    .hammer-container {
+        width: 260px;
+        height: 260px;
+    }
+
+    .mjolnir {
+        height: 180px;
+    }
+
+    .rune-ring {
+        width: 290px;
+        height: 290px;
+    }
+
+    .rune-ring .rune {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hammer-container {
+        width: 220px;
+        height: 220px;
+    }
+
+    .mjolnir {
+        height: 140px;
+    }
+
+    .rune-ring {
+        width: 240px;
+        height: 240px;
+    }
+
+    .rune-ring .rune {
+        font-size: 14px;
+    }
+}

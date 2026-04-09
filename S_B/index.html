@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samarthya 2026 – Forge of Innovation</title>
+    <meta name="description" content="Samarthya 2026 — the flagship technical festival of IEEE SSIT Student Branch. A Norse mythology themed cinematic experience of innovation, engineering, and creativity.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="Css/loader.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --midnight: #020408;
+            --navy: #050d1a;
+            --navy2: #0a1628;
+            --frost: #e8f4f8;
+            --cyan: #00d4ff;
+            --cyan2: #00a8cc;
+            --gold: #c8a84b;
+            --gold2: #f0d080;
+            --gold-bright: #ffe4a0;
+            --rune-glow: rgba(0, 212, 255, 0.6);
+            --gold-glow: rgba(200, 168, 75, 0.5);
+            --fog: rgba(8, 20, 40, 0.85);
+            --container: min(1200px, 92vw);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--midnight);
+            color: var(--frost);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .section-shell {
+            width: var(--container);
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* CUSTOM CURSOR */
+        #cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+            mix-blend-mode: screen;
+        }
+
+        #cursor-dot {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+        }
+
+        #cursor.hover {
+            width: 40px;
+            height: 40px;
+            border-color: var(--gold);
+        }
+
+
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 4vw, 3rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.4s;
+            background: transparent;
+        }
+
+        nav.scrolled {
+            background: rgba(2, 4, 8, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(200, 168, 75, 0.15);
+            box-shadow: 0 0 40px rgba(200, 168, 75, 0.05);
+        }
+
+        .nav-logo {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(0.85rem, 2vw, 1.1rem);
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold-glow);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: clamp(1rem, 3vw, 2.5rem);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(232, 244, 248, 0.7);
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold2);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-register {
+            padding: 0.6rem 1.4rem;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .nav-register::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+            z-index: -1;
+        }
+
+        .nav-register:hover {
+            color: var(--midnight);
+        }
+
+        .nav-register:hover::before {
+            transform: scaleX(1);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--frost);
+            transition: 0.3s;
+            display: block;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* HERO */
+        #hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: clamp(80px, 12vh, 120px) clamp(1rem, 4vw, 2rem) clamp(2rem, 4vh, 3rem);
+        }
+
+        #hero-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.55rem, 1.2vw, 0.75rem);
+            letter-spacing: 0.4em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2.5rem, 10vw, 9rem);
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            color: transparent;
+            background: linear-gradient(180deg, var(--gold2) 0%, var(--gold) 50%, #8b6a1a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 0 60px rgba(200, 168, 75, 0.5));
+            opacity: 0;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 2vw, 1rem);
+            letter-spacing: 0.35em;
+            color: rgba(232, 244, 248, 0.8);
+            text-transform: uppercase;
+            opacity: 0;
+            margin-bottom: 8px;
+        }
+
+        .hero-tagline {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(1rem, 3vw, 2rem);
+            font-weight: 300;
+            color: var(--cyan);
+            letter-spacing: clamp(0.2em, 3vw, 0.5em);
+            text-transform: uppercase;
+            opacity: 0;
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px var(--cyan);
+        }
+
+        .hero-date {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+            color: rgba(232, 244, 248, 0.6);
+            letter-spacing: clamp(0.15em, 2vw, 0.3em);
+            opacity: 0;
+            margin-bottom: 40px;
+        }
+
+        .hero-date span {
+            color: var(--gold);
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            opacity: 0;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 3;
+        }
+
+        .btn-rune {
+            position: relative;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2.5rem);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .btn-rune-primary {
+            background: linear-gradient(135deg, var(--gold), #8b6a1a);
+            color: var(--midnight);
+            box-shadow: 0 0 30px rgba(200, 168, 75, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-rune-primary:hover {
+            box-shadow: 0 0 60px rgba(200, 168, 75, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-rune-secondary {
+            background: transparent;
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2), inset 0 0 20px rgba(0, 212, 255, 0.05);
+        }
+
+        .btn-rune-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5), inset 0 0 30px rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-rune::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-rune:hover::before {
+            left: 100%;
+        }
+
+        .scroll-indicator {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.6;
+            margin-top: 50px;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--gold));
+            animation: scrollPulse 2s ease infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scaleY(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+
+        .scroll-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            color: var(--gold);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        /* =========================================
+           NORDIC GOLD DIVIDER (replaces rainbow)
+           ========================================= */
+        .nordic-divider {
+            position: relative;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+            isolation: isolate;
+        }
+
+        .nordic-divider-line {
+            width: min(1100px, 88vw);
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(200, 168, 75, 0.1) 10%,
+                rgba(200, 168, 75, 0.4) 30%,
+                rgba(240, 208, 128, 0.85) 50%,
+                rgba(200, 168, 75, 0.4) 70%,
+                rgba(200, 168, 75, 0.1) 90%,
+                transparent 100%
+            );
+            position: relative;
+            opacity: 0;
+        }
+
+        /* Gold glow aura above and below the line */
+        .nordic-divider-line::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            height: 40px;
+            background: radial-gradient(ellipse at center,
+                rgba(240, 208, 128, 0.12) 0%,
+                rgba(200, 168, 75, 0.04) 40%,
+                transparent 70%
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Rune texture marks along the divider */
+        .nordic-divider-line::after {
+            content: 'ᚠ · ᚢ · ᚦ · ᚨ · ᚱ';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.5rem;
+            letter-spacing: 0.6em;
+            color: rgba(200, 168, 75, 0.2);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* Animated shimmer that travels across the divider */
+        .nordic-divider-shimmer {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 228, 160, 0.9), transparent);
+            box-shadow: 0 0 15px rgba(240, 208, 128, 0.6), 0 0 30px rgba(200, 168, 75, 0.3);
+            transform: translateY(-50%);
+            animation: shimmerTravel 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmerTravel {
+            0% { left: -80px; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: calc(100% + 80px); opacity: 0; }
+        }
+
+        /* Small dot accents at center */
+        .nordic-divider-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background: var(--gold2);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--gold), 0 0 20px rgba(200, 168, 75, 0.3);
+            animation: dotPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 8px var(--gold), 0 0 20px rgba(200,168,75,0.3); transform: translate(-50%,-50%) scale(1); }
+            50% { box-shadow: 0 0 15px var(--gold), 0 0 40px rgba(200,168,75,0.5); transform: translate(-50%,-50%) scale(1.3); }
+        }
+
+        /* ABOUT */
+        #about {
+            position: relative;
+            padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 3vw, 2rem);
+            overflow: hidden;
+            background: linear-gradient(180deg, var(--midnight) 0%, var(--navy) 50%, var(--midnight) 100%);
+        }
+
+        .about-bg-runes {
+            position: absolute;
+            inset: 0;
+            opacity: 0.03;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(8rem, 20vw, 15rem);
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .section-eyebrow {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+            letter-spacing: 0.5em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.6rem, 5vw, 4rem);
+            text-align: center;
+            color: var(--gold);
+            text-shadow: 0 0 40px var(--gold-glow);
+            margin-bottom: clamp(2rem, 5vw, 4rem);
+            line-height: 1.2;
+        }
+
+        .stone-slabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            gap: clamp(1rem, 3vw, 2rem);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+
+
+        .stone-slab {
+            position: relative;
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.8), rgba(5, 13, 26, 0.9));
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            transform: translateY(60px);
+            opacity: 0;
+            transition: all 0.6s;
+        }
+
+        .stone-slab::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), transparent);
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+        }
+
+        .stone-slab:hover {
+            border-color: rgba(200, 168, 75, 0.4);
+            box-shadow: 0 0 30px rgba(200, 168, 75, 0.1), inset 0 0 30px rgba(200, 168, 75, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .slab-rune {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--gold);
+            margin-bottom: 1rem;
+            opacity: 0.7;
+            text-shadow: 0 0 15px rgba(200, 168, 75, 0.3);
+        }
+
+        .slab-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: var(--gold);
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+        }
+
+        .slab-text {
+            font-size: clamp(0.85rem, 1.3vw, 1rem);
+            line-height: 1.7;
+            color: rgba(232, 244, 248, 0.7);
+            font-weight: 300;
+        }
+
+        /* SOCIETIES */
+        #societies {
+            padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 3vw, 2rem);
+            background: var(--midnight);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #societies::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(200, 168, 75, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .societies-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: clamp(0.75rem, 2vw, 1.5rem);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .society-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .rune-circle {
+            width: clamp(70px, 12vw, 100px);
+            height: clamp(70px, 12vw, 100px);
+            border-radius: 50%;
+            border: 2px solid rgba(200, 168, 75, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.4s;
+            background: rgba(200, 168, 75, 0.02);
+        }
+
+        .rune-circle::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(200, 168, 75, 0.15);
+            transition: all 0.4s;
+        }
+
+        .rune-circle::after {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            border-radius: 50%;
+            border: 1px dashed rgba(200, 168, 75, 0.12);
+            animation: runeRotate 8s linear infinite;
+        }
+
+        @keyframes runeRotate {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .rune-circle:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(200, 168, 75, 0.25), inset 0 0 20px rgba(200, 168, 75, 0.08);
+            background: rgba(200, 168, 75, 0.06);
+        }
+
+        .rune-circle:hover::before {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(200, 168, 75, 0.2);
+        }
+
+        .society-placeholder {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.45rem, 0.8vw, 0.55rem);
+            letter-spacing: 0.15em;
+            color: rgba(232, 244, 248, 0.4);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .society-name {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.5rem, 0.9vw, 0.6rem);
+            letter-spacing: 0.1em;
+            color: rgba(232, 244, 248, 0.5);
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* EVENTS */
+        #events {
+            padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 3vw, 2rem);
+            background: linear-gradient(180deg, var(--midnight) 0%, #030810 50%, var(--midnight) 100%);
+            position: relative;
+        }
+
+        #events-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            max-width: 1200px;
+            margin: 0 auto clamp(1.5rem, 3vw, 3rem);
+        }
+
+        .event-card {
+            position: relative;
+            padding: clamp(1.25rem, 2.5vw, 2rem) clamp(1rem, 2vw, 1.5rem);
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.9), rgba(5, 13, 26, 0.95));
+            border: 1px solid rgba(200, 168, 75, 0.2);
+            cursor: pointer;
+            transition: all 0.4s;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(200, 168, 75, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .event-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(200, 168, 75, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-card:hover::after {
+            left: 100%;
+        }
+
+        .event-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(200, 168, 75, 0.25), inset 0 0 30px rgba(200, 168, 75, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .event-number {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.5rem, 0.8vw, 0.6rem);
+            color: rgba(200, 168, 75, 0.4);
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-norse {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(200, 168, 75, 0.4);
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .event-common {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.6rem, 1vw, 0.7rem);
+            color: rgba(0, 212, 255, 0.7);
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+        }
+
+        .event-divider {
+            width: 30px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            margin-bottom: 1rem;
+        }
+
+        .event-click-hint {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.5rem, 0.8vw, 0.6rem);
+            color: rgba(232, 244, 248, 0.3);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .event-rune-corner {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.5rem;
+            color: rgba(200, 168, 75, 0.15);
+        }
+
+        .events-register-wrap {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* YGGDRASIL SECTION */
+        #yggdrasil-section {
+            padding: clamp(3rem, 6vw, 4rem) clamp(1rem, 3vw, 2rem);
+            text-align: center;
+            position: relative;
+        }
+
+        .yggdrasil-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 980px;
+            height: clamp(400px, 65vw, 700px);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .yggdrasil-tree {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            object-fit: contain;
+            filter:
+                drop-shadow(0 0 20px rgba(207, 167, 74, 0.5))
+                drop-shadow(0 0 40px rgba(207, 167, 74, 0.3));
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.6s ease-out, transform 1.6s ease-out;
+            animation: treeFloat 8s ease-in-out infinite;
+            animation-play-state: paused;
+        }
+
+        .yggdrasil-tree.visible {
+            opacity: 1;
+            transform: scale(1);
+            animation-play-state: running;
+        }
+
+        @keyframes treeFloat {
+            0%, 100% { transform: scale(1) translateY(-6px); }
+            50% { transform: scale(1) translateY(6px); }
+        }
+
+        /* WELCOME NORSE SECTION */
+        #welcome-norse {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background: radial-gradient(circle at center, #0a0a0f 0%, #050507 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #welcome-norse::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            animation: fogMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fogMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .welcome-container {
+            max-width: 800px;
+            z-index: 2;
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .welcome-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .welcome-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            line-height: 1.8;
+            color: #cfcfcf;
+            opacity: 0.9;
+            letter-spacing: 0.03em;
+        }
+
+        .welcome-scroll {
+            margin-top: 2.5rem;
+            font-size: 2rem;
+            color: #e6c77b;
+            animation: welcomeBounce 2s ease-in-out infinite;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(230, 199, 123, 0.4);
+        }
+
+        @keyframes welcomeBounce {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(10px); opacity: 1; }
+        }
+
+        /* REGISTRATIONS */
+        #registrations {
+            padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 3vw, 2rem);
+            background: linear-gradient(180deg, var(--midnight) 0%, var(--navy2) 50%, var(--midnight) 100%);
+            position: relative;
+        }
+
+        .reg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reg-card {
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.9), rgba(5, 13, 26, 0.95));
+            border: 1px solid rgba(200, 168, 75, 0.15);
+            padding: clamp(1.25rem, 2.5vw, 2rem);
+            transition: all 0.4s;
+            opacity: 0;
+            transform: translateY(30px);
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+        }
+
+        .reg-card:hover {
+            border-color: rgba(200, 168, 75, 0.4);
+            box-shadow: 0 0 25px rgba(200, 168, 75, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .reg-img {
+            width: 100%;
+            height: clamp(80px, 15vw, 120px);
+            background: linear-gradient(135deg, rgba(200, 168, 75, 0.04), rgba(200, 168, 75, 0.02));
+            border: 1px solid rgba(200, 168, 75, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            color: rgba(200, 168, 75, 0.3);
+        }
+
+        .reg-norse {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: var(--gold);
+            margin-bottom: 0.25rem;
+        }
+
+        .reg-common {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.55rem, 0.9vw, 0.65rem);
+            color: var(--cyan);
+            letter-spacing: 0.2em;
+            margin-bottom: 0.75rem;
+        }
+
+        .reg-desc {
+            font-size: clamp(0.75rem, 1.1vw, 0.85rem);
+            color: rgba(232, 244, 248, 0.5);
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            font-weight: 300;
+        }
+
+        .btn-soon {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid rgba(200, 168, 75, 0.3);
+            color: rgba(200, 168, 75, 0.6);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.6rem, 0.9vw, 0.7rem);
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            cursor: not-allowed;
+            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+        }
+
+        /* CONTACT */
+        #contact {
+            padding: clamp(4rem, 8vw, 6rem) clamp(1rem, 3vw, 2rem);
+            background: var(--midnight);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-rune-circle {
+            width: clamp(140px, 25vw, 200px);
+            height: clamp(140px, 25vw, 200px);
+            border-radius: 50%;
+            border: 1px solid rgba(200, 168, 75, 0.25);
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: runeRotate 20s linear infinite;
+        }
+
+        .contact-rune-circle::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border-radius: 50%;
+            border: 1px solid rgba(200, 168, 75, 0.15);
+            animation: runeRotate 10s linear infinite reverse;
+        }
+
+        .contact-inner {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--gold);
+            text-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 2rem 0;
+        }
+
+        .contact-item {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+            color: rgba(232, 244, 248, 0.6);
+            letter-spacing: 0.2em;
+        }
+
+        .contact-item span {
+            color: var(--gold);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+            background: linear-gradient(180deg, var(--midnight) 0%, #010205 100%);
+            border-top: 1px solid rgba(200, 168, 75, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .footer-texture {
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 30px,
+                    rgba(200, 168, 75, 0.02) 30px, rgba(200, 168, 75, 0.02) 31px);
+        }
+
+        .footer-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: var(--gold);
+            text-shadow: 0 0 30px var(--gold-glow);
+            position: relative;
+        }
+
+        .footer-org {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+            color: var(--cyan);
+            letter-spacing: 0.3em;
+            margin: 0.5rem 0 1.5rem;
+            position: relative;
+        }
+
+        .footer-details {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            color: rgba(232, 244, 248, 0.4);
+            letter-spacing: 0.2em;
+            line-height: 2;
+            position: relative;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(200, 168, 75, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(232, 244, 248, 0.4);
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .social-icon:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 15px rgba(200, 168, 75, 0.3);
+        }
+
+        .footer-copy {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.5rem, 0.8vw, 0.6rem);
+            color: rgba(232, 244, 248, 0.2);
+            letter-spacing: 0.2em;
+            position: relative;
+        }
+
+        .footer-rune-line {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 1rem auto;
+            position: relative;
+        }
+
+        /* MODAL */
+        #modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 4, 8, 0.95);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(1rem, 3vw, 2rem);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+            backdrop-filter: blur(10px);
+        }
+
+        #modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(10, 22, 40, 0.98), rgba(5, 13, 26, 0.99));
+            border: 1px solid rgba(200, 168, 75, 0.3);
+            padding: clamp(1.25rem, 3vw, 3rem);
+            clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px));
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 86vh;
+            overflow-y: auto;
+        }
+
+        #modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-rune-ring {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(60px, 10vw, 80px);
+            height: clamp(60px, 10vw, 80px);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--midnight);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            color: var(--gold);
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        .modal-img {
+            width: 100%;
+            height: clamp(120px, 20vw, 180px);
+            background: linear-gradient(135deg, rgba(200, 168, 75, 0.04), rgba(200, 168, 75, 0.02));
+            border: 1px solid rgba(200, 168, 75, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3rem;
+            color: rgba(200, 168, 75, 0.2);
+        }
+
+        .modal-norse {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold-glow);
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-common {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(0.6rem, 1vw, 0.75rem);
+            color: var(--cyan);
+            letter-spacing: 0.3em;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-desc {
+            font-size: clamp(0.85rem, 1.3vw, 1rem);
+            line-height: 1.7;
+            color: rgba(232, 244, 248, 0.7);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(232, 244, 248, 0.2);
+            background: transparent;
+            color: rgba(232, 244, 248, 0.6);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* PARTICLES */
+        #particle-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* RUNE FLOATERS */
+        .rune-float {
+            position: fixed;
+            font-family: 'Cinzel Decorative', serif;
+            color: rgba(200, 168, 75, 0.06);
+            pointer-events: none;
+            z-index: 0;
+            animation: runeFloat linear infinite;
+            user-select: none;
+        }
+
+        @keyframes runeFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 0.5; }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* GLOW LINES */
+        .glow-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0.1;
+            width: 100%;
+        }
+
+        /* =========================================
+           FULLY RESPONSIVE
+           ========================================= */
+
+        /* Tablet */
+        @media (max-width: 1024px) {
+            .societies-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 1rem;
+            }
+
+            .events-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                cursor: auto;
+            }
+
+            #cursor,
+            #cursor-dot {
+                display: none;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                height: 100dvh;
+                background: rgba(2, 4, 8, 0.98);
+                align-items: center;
+                justify-content: center;
+                gap: 1.5rem;
+                z-index: 999;
+                padding: 5rem 1.5rem 2rem;
+                backdrop-filter: blur(20px);
+            }
+
+            .nav-links.open a {
+                font-size: 1.1rem;
+                color: var(--frost);
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .societies-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.25rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .scroll-indicator {
+                margin-top: 35px;
+            }
+
+            .nav-register {
+                display: none;
+            }
+
+            .stone-slabs {
+                grid-template-columns: 1fr;
+            }
+
+            .stone-slab {
+                clip-path: none;
+                border-radius: 8px;
+                padding: 1.5rem;
+            }
+
+            .event-card,
+            .reg-card,
+            .modal-box {
+                clip-path: none;
+                border-radius: 10px;
+            }
+
+
+
+            .events-grid {
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .societies-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-content {
+                padding: 1rem 0.75rem;
+            }
+
+            .btn-rune {
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
+                padding: 0.9rem 1rem;
+            }
+
+            .contact-rune-circle {
+                width: 120px;
+                height: 120px;
+            }
+
+            .section-title {
+                margin-bottom: 2rem;
+            }
+
+            .modal-rune-ring {
+                width: 56px;
+                height: 56px;
+                top: -28px;
+                font-size: 1rem;
+            }
+
+
+
+            .nordic-divider-line::after {
+                font-size: 0.4rem;
+                letter-spacing: 0.3em;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--midnight);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--gold), var(--gold2));
+            border-radius: 2px;
+        }
+
+        /* ANIMATED GLOW PULSE */
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(200, 168, 75, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(200, 168, 75, 0.6);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- ============================================= -->
+    <!-- FORGE LOADER — Cinematic Norse Mythology Loader -->
+    <!-- ============================================= -->
+    <div id="forge-loader">
+        <!-- Layer 1: Lightning Canvas -->
+        <canvas id="lightning-canvas"></canvas>
+
+        <!-- Layer 2: Volumetric Fog -->
+        <div class="fog-layer"></div>
+
+        <!-- Hammer Container — anchor for ALL energy effects -->
+        <div class="hammer-container">
+            <!-- Orbiting Rune Ring -->
+            <div class="rune-ring"></div>
+
+            <!-- Hammer Image -->
+            <img src="Assets/mjolnir.png" alt="Mjölnir" class="mjolnir">
+
+
+            <!-- Shockwave Rings (spawn from core) -->
+            <div class="shockwave-ring"></div>
+            <div class="shockwave-ring"></div>
+            <div class="shockwave-ring"></div>
+        </div>
+
+        <!-- Cyan Flash Screen -->
+        <div class="flash-screen"></div>
+
+        <!-- Golden Mist Particles -->
+        <div class="golden-mist-container"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="#hero" class="nav-logo">⚡ SAMARTHYA</a>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#societies">Societies</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#registrations">Registrations</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="#registrations" class="nav-register btn-rune">Register for Samarthya</a>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-eyebrow">ᚠᚢᚦᚨᚱᚲ · IEEE SSIT Student Branch · ᚠᚢᚦᚨᚱᚲ</div>
+            <h1 class="hero-title">SAMARTHYA<br>2026</h1>
+            <p class="hero-subtitle">Flagship Technical Fest of IEEE SSIT Student Branch</p>
+            <p class="hero-tagline">Forge of Innovation</p>
+            <p class="hero-date"><span>22 – 23 April 2026</span> &nbsp;·&nbsp; SSIT, Tumakuru</p>
+            <div class="hero-buttons">
+                <a href="#events" class="btn-rune btn-rune-primary">Explore Events</a>
+                <a href="#registrations" class="btn-rune btn-rune-secondary">Register Now</a>
+            </div>
+            <div class="scroll-indicator">
+                <div class="scroll-line"></div>
+                <div class="scroll-text">SCROLL</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WELCOME NORSE SECTION -->
+    <section id="welcome-norse">
+        <div class="welcome-container">
+            <h2 class="section-title">Welcome to the Norse World</h2>
+            <p class="welcome-text">
+                Step beyond the veil of reality and enter a realm forged in myth and legend.
+                A world where gods walk among mortals, where thunder echoes from the hammer of Thor,
+                and where the great World Tree binds all existence together.<br><br>
+                This fest is not just an event — it is a journey through the Nine Realms,
+                inspired by the rich and powerful lore of Norse mythology.
+            </p>
+            <div class="welcome-scroll">↓</div>
+        </div>
+    </section>
+
+    <!-- NORDIC GOLD DIVIDER 1 -->
+    <div class="nordic-divider">
+        <div class="nordic-divider-line" id="div1"></div>
+        <div class="nordic-divider-shimmer"></div>
+        <div class="nordic-divider-dot"></div>
+    </div>
+
+    <!-- ABOUT / THE LEGEND SECTION -->
+    <section id="about">
+        <div class="about-bg-runes">ᚠ</div>
+        <div class="section-shell">
+            <div class="section-eyebrow">ᚨ · The Legend · ᚨ</div>
+            <h2 class="section-title">Forge of Legends</h2>
+            <div class="stone-slabs">
+                <div class="stone-slab" data-scroll="slab">
+                    <div class="slab-rune">ᚠ</div>
+                    <div class="slab-title">What is Samarthya?</div>
+                    <p class="slab-text">Samarthya 2026 is the flagship annual technical festival of IEEE SSIT Student
+                        Branch. A realm where engineers, innovators, and creators converge to forge their legacies
+                        through knowledge, skill, and ingenuity.</p>
+                </div>
+                <div class="stone-slab" data-scroll="slab">
+                    <div class="slab-rune">ᚢ</div>
+                    <div class="slab-title">The Vision</div>
+                    <p class="slab-text">Celebrating innovation, engineering excellence, and creativity across multiple
+                        IEEE technical societies, Samarthya brings together the brightest minds for two days of
+                        legendary trials and collaborative discovery.</p>
+                </div>
+                <div class="stone-slab" data-scroll="slab">
+                    <div class="slab-rune">ᚦ</div>
+                    <div class="slab-title">The Arena</div>
+                    <p class="slab-text">Held at SSIT, Tumakuru on April 22–23, 2026, the festival spans competitive
+                        events, technical showcases, and collaborative challenges — each a trial worthy of a true
+                        innovator's mettle.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- NORDIC GOLD DIVIDER 2 -->
+    <div class="nordic-divider">
+        <div class="nordic-divider-line" id="div2"></div>
+        <div class="nordic-divider-shimmer" style="animation-delay: 0.5s;"></div>
+        <div class="nordic-divider-dot"></div>
+    </div>
+
+    <!-- SOCIETIES SECTION -->
+    <section id="societies">
+        <div class="section-shell">
+            <div class="section-eyebrow">ᚱ · The Alliances · ᚱ</div>
+            <h2 class="section-title">Organizing IEEE Societies</h2>
+            <div class="societies-grid" id="societies-grid">
+                <!-- Row 1 -->
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚠ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society I</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚢ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society II</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚦ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society III</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚨ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society IV</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚱ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society V</div>
+                </div>
+                <!-- Row 2 -->
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚲ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society VI</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚷ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society VII</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚹ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society VIII</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚺ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society IX</div>
+                </div>
+                <div class="society-card">
+                    <div class="rune-circle">
+                        <div class="society-placeholder">ᚾ<br>Logo</div>
+                    </div>
+                    <div class="society-name">Society X</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NORDIC GOLD DIVIDER 3 -->
+    <div class="nordic-divider">
+        <div class="nordic-divider-line" id="div3"></div>
+        <div class="nordic-divider-shimmer" style="animation-delay: 1s;"></div>
+        <div class="nordic-divider-dot"></div>
+    </div>
+
+    <!-- EVENTS SECTION -->
+    <section id="events">
+        <canvas id="events-canvas"></canvas>
+        <div class="section-shell">
+            <div class="section-eyebrow">ᚷ · The Trials · ᚷ</div>
+            <h2 class="section-title">Trials of Samarthya</h2>
+            <div class="events-grid" id="events-grid"></div>
+            <div class="events-register-wrap">
+                <a href="#registrations" class="btn-rune btn-rune-primary">Enter the Arena – Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- YGGDRASIL SECTION -->
+    <section id="yggdrasil-section">
+        <div class="section-shell">
+            <div class="section-eyebrow">ᚹ · The World Tree · ᚹ</div>
+            <h2 class="section-title">Yggdrasil</h2>
+            <p
+                style="text-align:center; color:rgba(232,244,248,0.5); font-family:'Rajdhani',sans-serif; font-size:clamp(0.85rem, 1.5vw, 1rem); max-width:500px; margin:0 auto 2rem; letter-spacing:0.1em;">
+                The eternal world tree — root of all realms, connecting every trial of Samarthya.</p>
+            <div class="yggdrasil-container">
+                <img src="Assets/yggdrasil.png" alt="Yggdrasil — The World Tree" class="yggdrasil-tree">
+            </div>
+        </div>
+    </section>
+
+    <!-- NORDIC GOLD DIVIDER 4 -->
+    <div class="nordic-divider">
+        <div class="nordic-divider-line" id="div4"></div>
+        <div class="nordic-divider-shimmer" style="animation-delay: 1.5s;"></div>
+        <div class="nordic-divider-dot"></div>
+    </div>
+
+    <!-- REGISTRATIONS SECTION -->
+    <section id="registrations">
+        <div class="section-shell">
+            <div class="section-eyebrow">ᚺ · Enter the Arena · ᚺ</div>
+            <h2 class="section-title">Registrations</h2>
+            <p
+                style="text-align:center; color:rgba(232,244,248,0.5); font-family:'Rajdhani',sans-serif; font-size:clamp(0.9rem, 1.5vw, 1.1rem); max-width:600px; margin:0 auto 3rem; letter-spacing:0.1em;">
+                Choose your challenge and enter the arena. Registration opens soon for Samarthya 2026.</p>
+            <div class="reg-grid" id="reg-grid"></div>
+        </div>
+    </section>
+
+    <!-- NORDIC GOLD DIVIDER 5 -->
+    <div class="nordic-divider">
+        <div class="nordic-divider-line" id="div5"></div>
+        <div class="nordic-divider-shimmer" style="animation-delay: 2s;"></div>
+        <div class="nordic-divider-dot"></div>
+    </div>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <div class="section-shell">
+            <div class="section-eyebrow">ᚾ · Reach the Realm · ᚾ</div>
+            <h2 class="section-title">Contact</h2>
+            <div class="contact-content">
+                <div class="contact-rune-circle">
+                    <div class="contact-inner">ᚠ</div>
+                </div>
+                <div class="contact-info">
+                    <div class="contact-item"> <span>Coord 1 : 0000000000</span></div>
+                    <div class="contact-item"> <span>Coord 2 : 0000000000</span></div>
+                    <div class="contact-item"> <span>Coord 3 : 0000000000</span></div>
+                    <div class="contact-item"> <span>Coord 4 : 0000000000</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-texture"></div>
+        <div class="footer-rune-line"></div>
+        <div class="footer-title">SAMARTHYA 2026</div>
+        <div class="footer-org">IEEE SSIT Student Branch</div>
+        <div class="footer-socials">
+            <div class="social-icon" title="Instagram">IG</div>
+            <div class="social-icon" title="LinkedIn">in</div>
+            <div class="social-icon" title="IEEE Website">IEEE</div>
+        </div>
+        <div class="footer-details">
+            SSIT, Tumakuru &nbsp;·&nbsp; 22 – 23 April 2026<br>
+            ᚠᚢᚦᚨᚱᚲ · FORGE OF INNOVATION · ᚠᚢᚦᚨᚱᚲ
+        </div>
+        <div class="footer-rune-line" style="margin-top:1.5rem;"></div>
+        <div class="footer-copy">© 2026 IEEE SSIT Student Branch · All Rights Reserved</div>
+    </footer>
+
+    <!-- EVENT MODAL -->
+    <div id="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-rune-ring" id="modal-rune">ᚠ</div>
+            <button class="modal-close" id="modal-close">✕</button>
+            <div class="modal-img" id="modal-img">⚡</div>
+            <div class="modal-norse" id="modal-norse">Event Name</div>
+            <div class="modal-common" id="modal-common">[ Common Name ]</div>
+            <p class="modal-desc" id="modal-desc">Event description placeholder. Full details about this exciting trial
+                of Samarthya 2026 will be revealed soon. Prepare your skills, gather your knowledge, and ready yourself
+                for this legendary challenge.</p>
+            <a href="#registrations" class="btn-rune btn-rune-primary" onclick="closeModal()"
+                style="display:inline-block;text-decoration:none;">Register for this Event</a>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // EVENT DATA
+        // =============================================
+        const events = [
+            { norse: 'Valhalla', common: 'E-Games', rune: 'ᚠ', desc: 'Enter the digital colosseum. Compete in the ultimate gaming trials and prove your mastery in the electronic arena. Warriors of the virtual realm, your legend awaits.' },
+            { norse: 'Helheim', common: 'Escape Room', rune: 'ᚢ', desc: 'Venture into the shadowed realm. Solve cryptic puzzles, decode ancient mysteries, and escape the labyrinth before time runs out. Only the cleverest minds shall find the light.' },
+            { norse: 'Saga', common: 'Quiz', rune: 'ᚦ', desc: 'Channel the wisdom of the ages. Test your knowledge across technology, science, and engineering in this epic battle of intellect and quick thinking.' },
+            { norse: 'Volva', common: 'Kaggle Competition', rune: 'ᚨ', desc: 'Wield the magic of data. Craft predictive models, analyze hidden patterns, and divine insights from the vast sea of information in this data science championship.' },
+            { norse: 'Seidr', common: 'Reverse Engineering', rune: 'ᚱ', desc: 'Unravel the ancient code. Dissect, analyze, and reconstruct — working backwards from the known to reveal the unknown. A trial of deep technical mastery.' },
+            { norse: 'Bifrost', common: 'Treasure Hunt', rune: 'ᚲ', desc: 'Follow the rainbow bridge across the campus. Decode clues, unravel mysteries, and navigate the hidden pathways of SSIT in this epic multi-stage adventure.' },
+            { norse: 'Runecraft', common: 'Coding', rune: 'ᚷ', desc: 'Forge solutions from pure logic. Write elegant, efficient code to conquer algorithmic challenges and emerge as the supreme craftsman of the digital realm.' },
+            { norse: 'Runes', common: 'Spell Bee', rune: 'ᚹ', desc: 'Command the power of language itself. Spell your way to victory through technical jargon, scientific terminology, and the arcane vocabulary of modern engineering.' },
+            { norse: 'Yggdrasil', common: 'Web Design', rune: 'ᚺ', desc: 'Build the digital world tree. Design stunning, functional websites that branch across the web, connecting realms of creativity and technical precision.' },
+            { norse: 'Mimir', common: 'Shark Tank', rune: 'ᚾ', desc: 'Pitch your innovation to the council of wisdom. Present your startup idea, defend your vision, and convince the judges that your concept deserves to be forged into reality.' },
+            { norse: 'Jotunn', common: 'Robo War', rune: 'ᛁ', desc: 'Unleash your mechanical giant. Engineer battle robots and send them into the arena for the ultimate test of design, durability, and tactical warfare.' },
+            { norse: 'Sleipnir', common: 'Robo Race / LFR', rune: 'ᛃ', desc: 'Build the eight-legged steed of innovation. Design line-following robots that race with precision and speed through the course. Engineering speed meets perfection.' },
+            { norse: 'Eitri', common: 'Project Expo', rune: 'ᛇ', desc: 'Present the fruits of your forge. Showcase your technical projects, innovations, and research to judges and peers in this celebration of engineering achievement.' },
+            { norse: 'Loki', common: 'Crime Investigation', rune: 'ᛈ', desc: 'The trickster has struck — can you unveil the truth? Analyze evidence, question suspects, and piece together clues in this thrilling mystery-solving challenge.' },
+            { norse: 'Skald', common: 'Cinematography', rune: 'ᛉ', desc: 'Tell the tale through moving images. Craft compelling short films and visual narratives that capture the spirit of innovation, technology, and human creativity.' },
+            { norse: 'Folkvangr', common: 'Fun Games', rune: 'ᛊ', desc: 'Enter the field of the people — where joy and camaraderie reign. Engage in light-hearted yet competitive fun activities that celebrate the spirit of Samarthya.' }
+        ];
+
+        // =============================================
+        // POPULATE EVENTS GRID
+        // =============================================
+        const eventsGrid = document.getElementById('events-grid');
+        events.forEach((ev, i) => {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+    <div class="event-number">0${i + 1 < 10 ? '0' + (i + 1) : i + 1} / ${events.length}</div>
+    <div class="event-norse">${ev.norse}</div>
+    <div class="event-common">[ ${ev.common} ]</div>
+    <div class="event-divider"></div>
+    <div class="event-click-hint">Click to explore →</div>
+    <div class="event-rune-corner">${ev.rune}</div>
+  `;
+            card.addEventListener('click', () => openModal(ev));
+            eventsGrid.appendChild(card);
+        });
+
+        // POPULATE REG GRID
+        const regGrid = document.getElementById('reg-grid');
+        events.forEach(ev => {
+            const card = document.createElement('div');
+            card.className = 'reg-card';
+            card.innerHTML = `
+    <div class="reg-img">${ev.rune}</div>
+    <div class="reg-norse">${ev.norse}</div>
+    <div class="reg-common">[ ${ev.common} ]</div>
+    <p class="reg-desc">${ev.desc.substring(0, 80)}...</p>
+    <button class="btn-soon">Registration Opens Soon</button>
+  `;
+            regGrid.appendChild(card);
+        });
+
+        // =============================================
+        // MODAL
+        // =============================================
+        function openModal(ev) {
+            document.getElementById('modal-norse').textContent = ev.norse;
+            document.getElementById('modal-common').textContent = '[ ' + ev.common + ' ]';
+            document.getElementById('modal-desc').textContent = ev.desc;
+            document.getElementById('modal-rune').textContent = ev.rune;
+            document.getElementById('modal-img').textContent = ev.rune;
+            document.getElementById('modal-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('modal-close').addEventListener('click', closeModal);
+        document.getElementById('modal-overlay').addEventListener('click', e => {
+            if (e.target === document.getElementById('modal-overlay')) closeModal();
+        });
+
+        // =============================================
+        // CUSTOM CURSOR
+        // =============================================
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px'; cursor.style.top = mouseY + 'px';
+            cursorDot.style.left = mouseX + 'px'; cursorDot.style.top = mouseY + 'px';
+        });
+        document.querySelectorAll('a, button, .event-card, .rune-circle').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // =============================================
+        // NAVBAR SCROLL
+        // =============================================
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // HAMBURGER — with animated toggle
+        const hamburger = document.getElementById('hamburger');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            document.getElementById('nav-links').classList.toggle('open');
+        });
+        document.querySelectorAll('#nav-links a').forEach(a => {
+            a.addEventListener('click', () => {
+                document.getElementById('nav-links').classList.remove('open');
+                hamburger.classList.remove('active');
+            });
+        });
+
+        // =============================================
+        // MOBILE DETECTION
+        // =============================================
+        const isMobile = window.innerWidth < 768;
+
+        // =============================================
+        // HERO CANVAS (Three.js scene)
+        // =============================================
+        function initHeroCanvas() {
+            const canvas = document.getElementById('hero-canvas');
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, canvas.offsetWidth / canvas.offsetHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5);
+
+            // Stars/particles — fewer on mobile
+            const starGeo = new THREE.BufferGeometry();
+            const starCount = isMobile ? 800 : 2000;
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 50;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
+                const t = Math.random();
+                // Gold-dominant color palette
+                colors[i * 3] = t < 0.4 ? 0.78 : t < 0.7 ? 1 : 0.94;
+                colors[i * 3 + 1] = t < 0.4 ? 0.66 : t < 0.7 ? 0.84 : 0.82;
+                colors[i * 3 + 2] = t < 0.4 ? 0.29 : t < 0.7 ? 0.97 : 0.5;
+            }
+            starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            starGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const starMat = new THREE.PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.8 });
+            scene.add(new THREE.Points(starGeo, starMat));
+
+            // Energy rings
+            const rings = [];
+            const ringCount = isMobile ? 3 : 5;
+            for (let i = 0; i < ringCount; i++) {
+                const geo = new THREE.TorusGeometry(2 + i * 0.8, 0.01, 8, 64);
+                const mat = new THREE.MeshBasicMaterial({
+                    color: i % 2 === 0 ? 0xc8a84b : 0xf0d080,
+                    transparent: true,
+                    opacity: 0.15 - i * 0.02
+                });
+                const ring = new THREE.Mesh(geo, mat);
+                ring.rotation.x = Math.PI / 2 + (Math.random() - 0.5);
+                ring.rotation.y = Math.random() * Math.PI;
+                scene.add(ring);
+                rings.push(ring);
+            }
+
+            // Floating rune planes
+            const runeGeoms = [];
+            const runeCount = isMobile ? 4 : 8;
+            for (let i = 0; i < runeCount; i++) {
+                const geo = new THREE.PlaneGeometry(0.3, 0.3);
+                const mat = new THREE.MeshBasicMaterial({ color: 0xc8a84b, transparent: true, opacity: 0.12, side: THREE.DoubleSide });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 3);
+                scene.add(mesh);
+                runeGeoms.push({ mesh, speed: Math.random() * 0.005 + 0.002, offset: Math.random() * Math.PI * 2 });
+            }
+
+            // Mountain silhouettes
+            const mtnShape = new THREE.Shape();
+            mtnShape.moveTo(-10, -3);
+            mtnShape.lineTo(-6, 0.5); mtnShape.lineTo(-4, -0.5);
+            mtnShape.lineTo(-2, 2); mtnShape.lineTo(0, 1);
+            mtnShape.lineTo(2, 3); mtnShape.lineTo(4, 0.5);
+            mtnShape.lineTo(6, 1.5); mtnShape.lineTo(10, -0.5);
+            mtnShape.lineTo(10, -3);
+            mtnShape.closePath();
+            const mtnGeo = new THREE.ShapeGeometry(mtnShape);
+            const mtnMat = new THREE.MeshBasicMaterial({ color: 0x030912, transparent: true, opacity: 0.9 });
+            const mtn = new THREE.Mesh(mtnGeo, mtnMat);
+            mtn.position.set(0, -2, 2);
+            scene.add(mtn);
+
+            // Fog plane
+            const fogGeo = new THREE.PlaneGeometry(20, 3);
+            const fogMat = new THREE.MeshBasicMaterial({ color: 0x050d1a, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+            const fogPlane = new THREE.Mesh(fogGeo, fogMat);
+            fogPlane.position.set(0, -2.5, 2.5);
+            scene.add(fogPlane);
+
+            // Lightning
+            let lightningTimer = 0;
+            let lightningActive = false;
+            const lightningLines = [];
+
+            function createLightning() {
+                lightningLines.forEach(l => scene.remove(l));
+                lightningLines.length = 0;
+                const startX = (Math.random() - 0.5) * 6;
+                let x = startX, y = 4, z = -2;
+                const points = [new THREE.Vector3(x, y, z)];
+                while (y > -3) {
+                    x += (Math.random() - 0.5) * 1.5;
+                    y -= Math.random() * 1.5 + 0.5;
+                    points.push(new THREE.Vector3(x, y, z));
+                }
+                const geo = new THREE.BufferGeometry().setFromPoints(points);
+                const mat = new THREE.LineBasicMaterial({ color: 0xc8a84b, transparent: true, opacity: 0.6 });
+                const line = new THREE.Line(geo, mat);
+                scene.add(line);
+                lightningLines.push(line);
+                lightningActive = true;
+                setTimeout(() => { lightningActive = false; lightningLines.forEach(l => scene.remove(l)); }, 150);
+            }
+
+            let mouse = { x: 0, y: 0 };
+            document.addEventListener('mousemove', e => {
+                mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
+            });
+
+            let t = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                t += 0.005;
+                rings.forEach((r, i) => { r.rotation.z += 0.003 * (i % 2 === 0 ? 1 : -1); r.rotation.x += 0.001; });
+                runeGeoms.forEach(rg => { rg.mesh.rotation.z += rg.speed; rg.mesh.position.y += Math.sin(t + rg.offset) * 0.003; });
+                camera.position.x += (mouse.x * 0.3 - camera.position.x) * 0.05;
+                camera.position.y += (mouse.y * 0.2 - camera.position.y) * 0.05;
+                camera.lookAt(0, 0, 0);
+                lightningTimer++;
+                if (lightningTimer > 200 + Math.random() * 300) { createLightning(); lightningTimer = 0; }
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = canvas.offsetWidth / canvas.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.offsetWidth, canvas.offsetHeight);
+            });
+        }
+        initHeroCanvas();
+
+        // =============================================
+        // HERO TEXT ANIMATIONS (after loader)
+        // =============================================
+        function startHeroAnimations() {
+            const els = ['.hero-eyebrow', '.hero-title', '.hero-subtitle', '.hero-tagline', '.hero-date', '.hero-buttons'];
+            els.forEach((sel, i) => {
+                setTimeout(() => {
+                    const el = document.querySelector(sel);
+                    if (el) {
+                        el.style.transition = 'opacity 0.8s, transform 0.8s';
+                        el.style.transform = 'translateY(0)';
+                        el.style.opacity = '1';
+                    }
+                }, i * 200);
+            });
+        }
+
+        // =============================================
+        // PARTICLE CANVAS (background)
+        // =============================================
+        const pCanvas = document.getElementById('particle-canvas');
+        const pCtx = pCanvas.getContext('2d');
+        pCanvas.width = window.innerWidth;
+        pCanvas.height = window.innerHeight;
+        const bgParticleCount = isMobile ? 35 : 80;
+        const particles = [];
+        for (let i = 0; i < bgParticleCount; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 0.3, vy: -Math.random() * 0.5 - 0.1,
+                r: Math.random() * 1.5 + 0.5, alpha: Math.random() * 0.3 + 0.05,
+                color: Math.random() > 0.4 ? '200,168,75' : '240,208,128'
+            });
+        }
+        function animateParticles() {
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.y < -5) { p.y = pCanvas.height + 5; p.x = Math.random() * pCanvas.width; }
+                pCtx.beginPath();
+                pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                pCtx.fillStyle = `rgba(${p.color},${p.alpha})`;
+                pCtx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        window.addEventListener('resize', () => { pCanvas.width = window.innerWidth; pCanvas.height = window.innerHeight; });
+
+        // =============================================
+        // WELCOME NORSE ENTRANCE — reveal on scroll
+        // =============================================
+        const welcomeContainer = document.querySelector('.welcome-container');
+        if (welcomeContainer) {
+            const welcomeObs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        welcomeContainer.classList.add('visible');
+                        welcomeObs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            welcomeObs.observe(welcomeContainer);
+        }
+
+        // =============================================
+        // YGGDRASIL ENTRANCE — reveal on scroll
+        // =============================================
+        const yggTree = document.querySelector('.yggdrasil-tree');
+        if (yggTree) {
+            const yggObs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        yggTree.classList.add('visible');
+                        yggObs.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            yggObs.observe(yggTree);
+        }
+
+        // =============================================
+        // SCROLL ANIMATIONS (GSAP ScrollTrigger)
+        // =============================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Stone slabs
+        gsap.utils.toArray('.stone-slab').forEach((slab, i) => {
+            gsap.to(slab, {
+                opacity: 1, y: 0,
+                duration: 0.8, delay: i * 0.15,
+                scrollTrigger: { trigger: slab, start: 'top 80%' }
+            });
+        });
+
+        // Society cards
+        gsap.utils.toArray('.society-card').forEach((card, i) => {
+            gsap.to(card, {
+                opacity: 1, scale: 1,
+                duration: 0.6, delay: i * 0.07,
+                ease: 'back.out(1.7)',
+                scrollTrigger: { trigger: '#societies', start: 'top 70%' }
+            });
+        });
+
+        // Event cards
+        gsap.utils.toArray('.event-card').forEach((card, i) => {
+            gsap.to(card, {
+                opacity: 1, y: 0,
+                duration: 0.6, delay: i * 0.05,
+                scrollTrigger: { trigger: '#events', start: 'top 70%' }
+            });
+        });
+
+        // Reg cards
+        gsap.utils.toArray('.reg-card').forEach((card, i) => {
+            gsap.to(card, {
+                opacity: 1, y: 0,
+                duration: 0.6, delay: i * 0.05,
+                scrollTrigger: { trigger: '#registrations', start: 'top 70%' }
+            });
+        });
+
+        // Nordic dividers (fade in)
+        ['div1', 'div2', 'div3', 'div4', 'div5'].forEach(id => {
+            gsap.to('#' + id, {
+                opacity: 1,
+                duration: 1.5,
+                scrollTrigger: { trigger: '#' + id, start: 'top 90%' }
+            });
+        });
+
+
+
+        // =============================================
+        // FLOATING RUNES (background decoration)
+        // =============================================
+        const runeChars = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ';
+        const floatCount = isMobile ? 8 : 15;
+        for (let i = 0; i < floatCount; i++) {
+            const rune = document.createElement('div');
+            rune.className = 'rune-float';
+            rune.textContent = runeChars[Math.floor(Math.random() * runeChars.length)];
+            rune.style.left = Math.random() * 100 + 'vw';
+            rune.style.fontSize = (Math.random() * 30 + 20) + 'px';
+            rune.style.animationDuration = (Math.random() * 20 + 15) + 's';
+            rune.style.animationDelay = (-Math.random() * 20) + 's';
+            document.body.appendChild(rune);
+        }
+
+        // =============================================
+        // SECTION TITLES FADE IN
+        // =============================================
+        gsap.utils.toArray('.section-title, .section-eyebrow').forEach(el => {
+            gsap.fromTo(el,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 1, scrollTrigger: { trigger: el, start: 'top 85%' } }
+            );
+        });
+
+        // =============================================
+        // INIT HERO TEXT STATE (pre-animation)
+        // =============================================
+        ['.hero-eyebrow', '.hero-title', '.hero-subtitle', '.hero-tagline', '.hero-date', '.hero-buttons'].forEach(sel => {
+            const el = document.querySelector(sel);
+            if (el) { el.style.opacity = '0'; el.style.transform = 'translateY(30px)'; }
+        });
+    </script>
+    <script src="Js/loader.js"></script>
+</body>
+
+</html>
