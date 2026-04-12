@@ -178,10 +178,7 @@
             createBolt();
         }
 
-        // Trigger raven panic scatter on sonic boom
-        if (typeof window.triggerRavenPanic === 'function') {
-            window.triggerRavenPanic();
-        }
+
 
     }, 2000);
 

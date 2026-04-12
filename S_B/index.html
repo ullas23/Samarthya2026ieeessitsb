@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="Css/loader.css">
-    <link rel="stylesheet" href="Css/ravens.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -642,8 +642,8 @@
 
         .societies-grid {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: clamp(0.75rem, 2vw, 1.5rem);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(1.5rem, 3vw, 2.5rem);
             max-width: 900px;
             margin: 0 auto;
         }
@@ -652,14 +652,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
             opacity: 0;
             transform: scale(0.8);
         }
 
         .rune-circle {
-            width: clamp(70px, 12vw, 100px);
-            height: clamp(70px, 12vw, 100px);
+            width: clamp(120px, 22vw, 220px);
+            height: clamp(120px, 22vw, 220px);
             border-radius: 50%;
             border: 2px solid rgba(200, 168, 75, 0.25);
             display: flex;
@@ -673,7 +673,7 @@
         .rune-circle::before {
             content: '';
             position: absolute;
-            inset: -6px;
+            inset: -8px;
             border-radius: 50%;
             border: 1px solid rgba(200, 168, 75, 0.15);
             transition: all 0.4s;
@@ -682,7 +682,7 @@
         .rune-circle::after {
             content: '';
             position: absolute;
-            inset: 6px;
+            inset: 8px;
             border-radius: 50%;
             border: 1px dashed rgba(200, 168, 75, 0.12);
             animation: runeRotate 8s linear infinite;
@@ -714,11 +714,26 @@
             text-transform: uppercase;
         }
 
+        .society-logo {
+            width: 82%;
+            height: 82%;
+            max-width: 200px;
+            object-fit: contain;
+            border-radius: 50%;
+            filter: brightness(0.9) contrast(1.1);
+            transition: filter 0.4s, transform 0.4s;
+        }
+
+        .rune-circle:hover .society-logo {
+            filter: brightness(1.1) contrast(1.15) drop-shadow(0 0 8px rgba(200, 168, 75, 0.5));
+            transform: scale(1.08);
+        }
+
         .society-name {
             font-family: 'Cinzel', serif;
-            font-size: clamp(0.5rem, 0.9vw, 0.6rem);
-            letter-spacing: 0.1em;
-            color: rgba(232, 244, 248, 0.5);
+            font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+            letter-spacing: 0.12em;
+            color: rgba(232, 244, 248, 0.55);
             text-align: center;
             text-transform: uppercase;
         }
@@ -1358,8 +1373,13 @@
         /* Tablet */
         @media (max-width: 1024px) {
             .societies-grid {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 1rem;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+
+            .rune-circle {
+                width: clamp(110px, 20vw, 180px);
+                height: clamp(110px, 20vw, 180px);
             }
 
             .events-grid {
@@ -1417,6 +1437,17 @@
                 gap: 1.25rem;
             }
 
+            .rune-circle {
+                width: clamp(100px, 26vw, 160px);
+                height: clamp(100px, 26vw, 160px);
+            }
+
+            .society-logo {
+                width: 80%;
+                height: 80%;
+                max-width: 140px;
+            }
+
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
@@ -1458,6 +1489,18 @@
         @media (max-width: 480px) {
             .societies-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .rune-circle {
+                width: clamp(100px, 35vw, 150px);
+                height: clamp(100px, 35vw, 150px);
+            }
+
+            .society-logo {
+                width: 78%;
+                height: 78%;
+                max-width: 120px;
             }
 
             .hero-content {
@@ -1677,68 +1720,7 @@
             <div class="section-eyebrow">ᚱ · The Alliances · ᚱ</div>
             <h2 class="section-title">Organizing IEEE Societies</h2>
             <div class="societies-grid" id="societies-grid">
-                <!-- Row 1 -->
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚠ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society I</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚢ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society II</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚦ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society III</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚨ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society IV</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚱ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society V</div>
-                </div>
-                <!-- Row 2 -->
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚲ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society VI</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚷ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society VII</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚹ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society VIII</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚺ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society IX</div>
-                </div>
-                <div class="society-card">
-                    <div class="rune-circle">
-                        <div class="society-placeholder">ᚾ<br>Logo</div>
-                    </div>
-                    <div class="society-name">Society X</div>
-                </div>
+                <!-- Logos dynamically populated by JavaScript -->
             </div>
         </div>
     </section>
@@ -1879,6 +1861,41 @@
             { norse: 'Skald', common: 'Cinematography', rune: 'ᛉ', desc: 'Tell the tale through moving images. Craft compelling short films and visual narratives that capture the spirit of innovation, technology, and human creativity.' },
             { norse: 'Folkvangr', common: 'Fun Games', rune: 'ᛊ', desc: 'Enter the field of the people — where joy and camaraderie reign. Engage in light-hearted yet competitive fun activities that celebrate the spirit of Samarthya.' }
         ];
+
+        // =============================================
+        // LOGO / SOCIETIES DATA
+        // =============================================
+        const societies = [
+            { name: 'IEEE', file: 'IEEE MB Logo.png' },
+            { name: 'IEEE SSIT SB', file: 'IEEE SSIT SB Logo.png' },
+            { name: 'IEEE Bangalore Section', file: 'IEEE Bangalore Section.png' },
+            { name: 'IEEE Women in Engineering', file: 'IEEE WIE Logo.png' },
+            { name: 'IEEE Sensors Council', file: 'IEEE Sensors Council Logo.png' },
+            { name: 'IEEE Computer Society', file: 'IEEE CS Logo.png' },
+            { name: 'IEEE Circuits and Systems Society', file: 'IEEE CAS Logo.png' },
+            { name: 'IEEE Computational Intelligence Society', file: 'IEEE CIS Logo.png' },
+            { name: 'IEEE Communications Society', file: 'IEEE COMSOC Logo.png' },
+            { name: 'IEEE Microwave Theory and Techniques Society', file: 'IEEE MTTS Logo 4x.png' },
+            { name: 'IEEE Power Electronics Society', file: 'IEEE PELS Logo.png' },
+            { name: 'IEEE Robotics & Automation Society', file: 'IEEE RAS Logo.png' }
+        ];
+
+        // POPULATE SOCIETIES / LOGOS GRID
+        const societiesGrid = document.getElementById('societies-grid');
+        const runeSymbols = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃ';
+        societies.forEach((soc, i) => {
+            const card = document.createElement('div');
+            card.className = 'society-card';
+            const runeChar = runeSymbols[i] || 'ᚠ';
+            card.innerHTML = `
+    <div class="rune-circle">
+        <img src="Logos/${soc.file}" alt="${soc.name}" class="society-logo"
+             onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'society-placeholder\\'>${runeChar}<br>Logo</div>';">
+    </div>
+    <div class="society-name">${soc.name}</div>
+  `;
+            societiesGrid.appendChild(card);
+        });
 
         // =============================================
         // POPULATE EVENTS GRID
@@ -2285,9 +2302,6 @@
     </script>
     <script src="Js/loader.js"></script>
 
-    <!-- Environment Layer — atmospheric effects (ravens, etc.) -->
-    <div id="environment-layer"></div>
-    <script src="Js/ravens.js"></script>
 </body>
 
 </html>
