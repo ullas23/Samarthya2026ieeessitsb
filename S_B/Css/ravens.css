@@ -1,0 +1,130 @@
+/* =============================================
+   RAVEN FLOCK ANIMATION — Environmental Layer
+   Norse-themed atmospheric flying ravens
+   ============================================= */
+
+/* Environment overlay — non-interactive, fixed fullscreen */
+#environment-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    overflow: hidden;
+}
+
+/* Individual raven element */
+.raven {
+    position: absolute;
+    width: 40px;
+    opacity: 0;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));
+    will-change: transform, opacity;
+    animation: flap 0.35s infinite alternate ease-in-out;
+}
+
+/* Wing flap animation — subtle vertical scale oscillation */
+@keyframes flap {
+    from {
+        transform: scaleY(1);
+    }
+    to {
+        transform: scaleY(0.82);
+    }
+}
+
+/* Flight path: left to top-right */
+@keyframes flyLeftToRight {
+    0% {
+        transform: translate(-60px, var(--start-y)) scaleX(1) scaleY(1);
+        opacity: 0;
+    }
+    5% {
+        opacity: var(--raven-opacity, 0.9);
+    }
+    90% {
+        opacity: var(--raven-opacity, 0.9);
+    }
+    100% {
+        transform: translate(calc(100vw + 60px), calc(var(--start-y) - 200px)) scaleX(1) scaleY(1);
+        opacity: 0;
+    }
+}
+
+/* Flight path: right to top-left */
+@keyframes flyRightToLeft {
+    0% {
+        transform: translate(calc(100vw + 60px), var(--start-y)) scaleX(-1) scaleY(1);
+        opacity: 0;
+    }
+    5% {
+        opacity: var(--raven-opacity, 0.9);
+    }
+    90% {
+        opacity: var(--raven-opacity, 0.9);
+    }
+    100% {
+        transform: translate(-60px, calc(var(--start-y) - 180px)) scaleX(-1) scaleY(1);
+        opacity: 0;
+    }
+}
+
+/* Flight path: bottom-left to upper-right */
+@keyframes flyDiagonalUp {
+    0% {
+        transform: translate(-60px, calc(100vh - 100px + var(--offset-y, 0px))) scaleX(1) scaleY(1);
+        opacity: 0;
+    }
+    5% {
+        opacity: var(--raven-opacity, 0.9);
+    }
+    90% {
+        opacity: var(--raven-opacity, 0.9);
+    }
+    100% {
+        transform: translate(calc(100vw + 60px), calc(-100px + var(--offset-y, 0px))) scaleX(1) scaleY(1);
+        opacity: 0;
+    }
+}
+
+/* Panic scatter — ravens fly rapidly outward from center */
+@keyframes panicScatter {
+    0% {
+        transform: translate(var(--panic-start-x), var(--panic-start-y)) scale(0.8);
+        opacity: 0;
+    }
+    8% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0.85;
+    }
+    100% {
+        transform: translate(var(--panic-end-x), var(--panic-end-y)) scale(1.1);
+        opacity: 0;
+    }
+}
+
+/* =========================================
+   RESPONSIVE — smaller ravens on mobile
+   ========================================= */
+@media (max-width: 768px) {
+    .raven {
+        width: 26px;
+    }
+}
+
+@media (max-width: 480px) {
+    .raven {
+        width: 22px;
+    }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .raven {
+        animation: none !important;
+    }
+}
