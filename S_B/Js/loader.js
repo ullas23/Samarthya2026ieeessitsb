@@ -178,6 +178,8 @@
             createBolt();
         }
 
+
+
     }, 2000);
 
     // 2.05s — Cyan flash
