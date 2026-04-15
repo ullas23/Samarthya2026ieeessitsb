@@ -1,128 +1,99 @@
-// api/register.js — Full Registration Pipeline
-const { getEvent } = require('../lib/events');
-const { validateMember, vCity, vUTR, vFile, checkTeamDupes } = require('../lib/validation');
-const { checkViolation } = require('../lib/conflicts');
-const { getNextSeq, appendRow, isDupeNameUSN, isDupeUTR, getRegisteredEventsForMembers } = require('../lib/sheets');
-const { uploadScreenshot } = require('../lib/drive');
-const { sendConfirmation } = require('../lib/mailer');
-const { genRegId, istNow, json, cors, parseForm } = require('../lib/utils');
+/**
+ * /api/register.js
+ * ------------------
+ * Accepts registration submissions from the frontend,
+ * validates them, checks for duplicates, and appends
+ * the data to Google Sheets.
+ *
+ * Route:  POST /api/register
+ */
 
-module.exports = async function handler(req, res) {
-    if (cors(req, res)) return;
-    if (req.method !== 'POST') return json(res, 405, { success:false, error:'Method not allowed' });
+const path = require('path');
+const fs = require('fs');
+const { success, error, send } = require('../backend/response');
+const { sanitize, validateRegistration, checkDuplicate } = require('../backend/validators');
+const { validateConfig } = require('../backend/config');
+const { getRegistrationRows, appendRegistration } = require('../backend/googleSheets');
 
-    try {
-        // 1. Parse multipart
-        const { fields, file } = await parseForm(req);
-        const eventId = fields.eventId;
+module.exports = async (req, res) => {
+  // ── Only allow POST ────────────────────────────────────
+  if (req.method !== 'POST') {
+    return send(res, 405, error('Method not allowed', 'METHOD_NOT_ALLOWED', ['Use POST']));
+  }
 
-        // 2. Validate event
-        const ev = getEvent(eventId);
-        if (!ev) return json(res, 400, { success:false, error:'Invalid event.' });
-        if (ev.isOfflineOnly) return json(res, 400, { success:false, error:'This event accepts offline registrations on spot only.' });
-
-        // 3. Parse + validate members
-        const count = parseInt(fields.memberCount) || 1;
-        if (count < ev.minMembers || count > ev.maxMembers) {
-            return json(res, 400, { success:false, error:`Team size must be ${ev.minMembers}–${ev.maxMembers}.` });
-        }
-
-        const raw = fields.members || [];
-        const allErrs = [];
-        const cleaned = [];
-        for (let i = 0; i < count; i++) {
-            const m = raw[i] || {};
-            const label = i === 0 ? 'Team Lead' : `Member ${i+1}`;
-            const r = validateMember(m, label);
-            if (!r.ok) allErrs.push(...r.errs);
-            else cleaned.push(r.cleaned);
-        }
-
-        // 4. City
-        const cityErr = vCity(fields.city);
-        if (cityErr) allErrs.push(cityErr);
-
-        // 5. UTR
-        const utrErr = vUTR(fields.utr);
-        if (utrErr) allErrs.push(utrErr);
-
-        // 6. Screenshot
-        const fileErr = vFile(file);
-        if (fileErr) allErrs.push(fileErr);
-
-        if (allErrs.length > 0) return json(res, 400, { success:false, errors:allErrs });
-
-        // 7. Intra-team duplicates
-        const teamDupes = checkTeamDupes(cleaned);
-        if (teamDupes.length > 0) return json(res, 400, { success:false, errors:teamDupes });
-
-        // 8. Same-event duplicate (Name+USN in Sheets)
-        for (const m of cleaned) {
-            if (await isDupeNameUSN(eventId, m.name, m.usn)) {
-                return json(res, 409, { success:false, error:`Already Registered! ${m.name} (${m.usn}) is already registered for this event.` });
-            }
-        }
-
-        // 9. Parallel conflict check
-        const regEvents = await getRegisteredEventsForMembers(cleaned);
-        const cv = checkViolation(eventId, regEvents);
-        if (cv.blocked) {
-            const names = cv.by.map(id => {
-                const e = getEvent(id);
-                return e ? `${e.norseName} (${e.commonName})` : id;
-            });
-            return json(res, 409, { success:false, error:`Event locked. A team member is registered for parallel event: ${names.join(', ')}.` });
-        }
-
-        // 10. UTR uniqueness
-        if (await isDupeUTR(fields.utr.trim())) {
-            return json(res, 409, { success:false, error:'Invalid UTR. This UTR number has already been used.' });
-        }
-
-        // 11. Upload screenshot to Drive
-        let screenshotLink = '';
-        try {
-            const up = await uploadScreenshot(file.buffer, file.filename, file.mime, `${ev.key}_${Date.now()}`);
-            screenshotLink = up.link || '';
-        } catch (e) {
-            console.error('[Drive]', e.message);
-            screenshotLink = 'UPLOAD_FAILED';
-        }
-
-        // 12. Generate Registration ID
-        const seq = await getNextSeq(eventId);
-        const regId = genRegId(ev.key, seq);
-
-        // 13. Append to Sheets
-        const ts = istNow();
-        await appendRow({
-            regId, eventId, eventName:ev.norseName, arenaName:ev.arenaName,
-            eventDate:ev.eventDate, minMembers:ev.minMembers, maxMembers:ev.maxMembers,
-            members:cleaned, city:fields.city.trim(), utr:fields.utr.trim(),
-            screenshotLink, timestamp:ts
-        });
-
-        // 14. Send confirmation email
-        let emailResult = { sent:false };
-        try {
-            emailResult = await sendConfirmation({
-                regId, eventName:ev.norseName, commonName:ev.commonName,
-                arenaName:ev.arenaName, eventDate:ev.eventDate, members:cleaned
-            });
-        } catch (e) { console.error('[Mail]', e.message); }
-
-        // 15. Success
-        return json(res, 200, {
-            success:true, registrationId:regId,
-            eventName:ev.norseName, eventCommon:ev.commonName,
-            arenaName:ev.arenaName, eventDate:ev.eventDate,
-            memberCount:cleaned.length, emailSent:emailResult.sent,
-            message:'Registration submitted successfully.'
-        });
-    } catch (e) {
-        console.error('[Register]', e);
-        return json(res, 500, { success:false, error:'An unexpected error occurred. Please try again.' });
+  try {
+    // ── Check env vars are set ─────────────────────────────
+    const missingVars = validateConfig();
+    if (missingVars.length > 0) {
+      console.error('[/api/register] Missing env vars:', missingVars);
+      return send(res, 500, error(
+        'Server configuration error',
+        'CONFIG_ERROR',
+        ['Backend is not fully configured. Contact the administrator.']
+      ));
     }
-};
 
-module.exports.config = { api: { bodyParser: false } };
+    // ── Parse body ─────────────────────────────────────────
+    const body = req.body;
+    if (!body || typeof body !== 'object') {
+      return send(res, 400, error('Invalid request body', 'INVALID_BODY', ['Request body must be valid JSON']));
+    }
+
+    // ── Sanitise string fields ─────────────────────────────
+    const sanitisedBody = {
+      eventId:         sanitize(body.eventId),
+      participantName: sanitize(body.participantName),
+      usn:             sanitize(body.usn),
+      email:           sanitize(body.email),
+      phone:           sanitize(body.phone),
+      college:         sanitize(body.college),
+      branch:          sanitize(body.branch),
+      semester:        sanitize(body.semester),
+      teamName:        body.teamName ? sanitize(body.teamName) : '',
+      teamSize:        body.teamSize ? Number(body.teamSize) : 1,
+      members:         Array.isArray(body.members)
+        ? body.members.map((m) => ({
+            name:  sanitize(m.name),
+            usn:   sanitize(m.usn),
+            email: sanitize(m.email),
+            phone: sanitize(m.phone),
+          }))
+        : [],
+    };
+
+    // ── Load event data ────────────────────────────────────
+    const dataPath = path.join(__dirname, '..', 'data', 'events.sample.json');
+    const events = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+    const event = events.find((e) => e.id === sanitisedBody.eventId);
+
+    // ── Validate payload ───────────────────────────────────
+    const validation = validateRegistration(sanitisedBody, event);
+    if (!validation.valid) {
+      return send(res, 400, error('Validation failed', 'INVALID_INPUT', validation.errors));
+    }
+
+    // ── Duplicate check via Google Sheets ──────────────────
+    const existingRows = await getRegistrationRows();
+    // Skip the header row (index 0) if it exists
+    const dataRows = existingRows.length > 0 ? existingRows.slice(1) : [];
+
+    const dupCheck = checkDuplicate(dataRows, sanitisedBody.eventId, sanitisedBody.email, sanitisedBody.usn);
+    if (dupCheck.isDuplicate) {
+      return send(res, 409, error('Duplicate registration', 'DUPLICATE', [dupCheck.reason]));
+    }
+
+    // ── Append row to Google Sheets ────────────────────────
+    await appendRegistration(sanitisedBody, event.title);
+
+    // ── Success ────────────────────────────────────────────
+    send(res, 201, success('Registration successful', {
+      eventId: sanitisedBody.eventId,
+      eventName: event.title,
+      participantName: sanitisedBody.participantName,
+      teamName: sanitisedBody.teamName || null,
+    }));
+  } catch (err) {
+    console.error('[/api/register] Unhandled error:', err);
+    send(res, 500, error('Registration failed', 'INTERNAL_ERROR', [err.message]));
+  }
+};

@@ -1,12 +1,9 @@
 {
-  "name": "samarthya2026",
+  "name": "samarthya-2026-backend",
   "version": "1.0.0",
+  "description": "Backend API for Samarthya 2026 - Forge of Innovation",
   "private": true,
-  "description": "Samarthya 2026 — IEEE SSIT SB Technical Fest Backend",
-  "engines": { "node": ">=18.0.0" },
   "dependencies": {
-    "googleapis": "^131.0.0",
-    "nodemailer": "^6.9.8",
-    "busboy": "^1.6.0"
+    "googleapis": "^131.0.0"
   }
 }
