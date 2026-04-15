@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samarthya 2026 – Forge of Innovation</title>
-    <meta name="description" content="Samarthya 2026 — the flagship technical festival of IEEE SSIT Student Branch. A Norse mythology themed cinematic experience of innovation, engineering, and creativity.">
+    <meta name="description"
+        content="Samarthya 2026 — the flagship technical festival of IEEE SSIT Student Branch. A Norse mythology themed cinematic experience of innovation, engineering, and creativity.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="Css/loader.css">
+    <link rel="stylesheet" href="Css/mobile-fix.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -60,32 +62,35 @@
         /* CUSTOM CURSOR */
         #cursor {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            border: 1px solid var(--cyan);
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--cyan);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 99999;
+            z-index: 999999;
             transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, border-color 0.2s;
-            mix-blend-mode: screen;
+            transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
         }
 
         #cursor-dot {
             position: fixed;
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
             background: var(--cyan);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 99999;
+            z-index: 999999;
             transform: translate(-50%, -50%);
+            box-shadow: 0 0 5px rgba(0, 212, 255, 0.8);
         }
 
         #cursor.hover {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-color: var(--gold);
+            background-color: rgba(200, 168, 75, 0.1);
+            box-shadow: 0 0 15px rgba(200, 168, 75, 0.5);
         }
 
 
@@ -214,9 +219,11 @@
         .hamburger.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
+
         .hamburger.active span:nth-child(2) {
             opacity: 0;
         }
+
         .hamburger.active span:nth-child(3) {
             transform: rotate(-45deg) translate(5px, -5px);
         }
@@ -398,10 +405,13 @@
         }
 
         @keyframes scrollPulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 opacity: 0.3;
                 transform: scaleY(0.8);
             }
+
             50% {
                 opacity: 1;
                 transform: scaleY(1);
@@ -434,14 +444,13 @@
             width: min(1100px, 88vw);
             height: 1px;
             background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(200, 168, 75, 0.1) 10%,
-                rgba(200, 168, 75, 0.4) 30%,
-                rgba(240, 208, 128, 0.85) 50%,
-                rgba(200, 168, 75, 0.4) 70%,
-                rgba(200, 168, 75, 0.1) 90%,
-                transparent 100%
-            );
+                    transparent 0%,
+                    rgba(200, 168, 75, 0.1) 10%,
+                    rgba(200, 168, 75, 0.4) 30%,
+                    rgba(240, 208, 128, 0.85) 50%,
+                    rgba(200, 168, 75, 0.4) 70%,
+                    rgba(200, 168, 75, 0.1) 90%,
+                    transparent 100%);
             position: relative;
             opacity: 0;
         }
@@ -456,10 +465,9 @@
             width: 60%;
             height: 40px;
             background: radial-gradient(ellipse at center,
-                rgba(240, 208, 128, 0.12) 0%,
-                rgba(200, 168, 75, 0.04) 40%,
-                transparent 70%
-            );
+                    rgba(240, 208, 128, 0.12) 0%,
+                    rgba(200, 168, 75, 0.04) 40%,
+                    transparent 70%);
             pointer-events: none;
             z-index: -1;
         }
@@ -494,10 +502,23 @@
         }
 
         @keyframes shimmerTravel {
-            0% { left: -80px; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { left: calc(100% + 80px); opacity: 0; }
+            0% {
+                left: -80px;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: calc(100% + 80px);
+                opacity: 0;
+            }
         }
 
         /* Small dot accents at center */
@@ -515,8 +536,17 @@
         }
 
         @keyframes dotPulse {
-            0%, 100% { box-shadow: 0 0 8px var(--gold), 0 0 20px rgba(200,168,75,0.3); transform: translate(-50%,-50%) scale(1); }
-            50% { box-shadow: 0 0 15px var(--gold), 0 0 40px rgba(200,168,75,0.5); transform: translate(-50%,-50%) scale(1.3); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 8px var(--gold), 0 0 20px rgba(200, 168, 75, 0.3);
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                box-shadow: 0 0 15px var(--gold), 0 0 40px rgba(200, 168, 75, 0.5);
+                transform: translate(-50%, -50%) scale(1.3);
+            }
         }
 
         /* =========================================
@@ -524,15 +554,31 @@
            ========================================= */
         #welcome-norse {
             position: relative;
-            padding-top: clamp(60px, 8vw, 120px);
-            padding-bottom: clamp(2rem, 5vw, 4rem);
+            padding-top: clamp(80px, 12vw, 150px);
+            padding-bottom: clamp(80px, 12vw, 150px);
             padding-left: clamp(1rem, 4vw, 2rem);
             padding-right: clamp(1rem, 4vw, 2rem);
+            min-height: clamp(600px, 55vw, 1200px);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             width: 100%;
+            overflow: hidden;
+            background: var(--midnight);
+        }
+
+        #welcome-norse::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('Assets/yggdrasil_bg.png');
+            background-size: 40%;
+            background-position: center top 20px;
+            background-repeat: no-repeat;
+            opacity: 0.20;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .welcome-container {
@@ -542,6 +588,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            position: relative;
+            z-index: 2;
         }
 
         .welcome-text {
@@ -561,8 +609,15 @@
         }
 
         @keyframes welcomeBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(10px);
+            }
         }
 
         /* ABOUT */
@@ -807,7 +862,7 @@
             position: relative;
         }
 
-        .arena-group + .arena-group {
+        .arena-group+.arena-group {
             margin-top: clamp(3rem, 6vw, 5rem);
         }
 
@@ -946,8 +1001,13 @@
             transition: left 0.5s;
         }
 
-        .event-card:hover::before { opacity: 1; }
-        .event-card:hover::after { left: 100%; }
+        .event-card:hover::before {
+            opacity: 1;
+        }
+
+        .event-card:hover::after {
+            left: 100%;
+        }
 
         .event-card:hover {
             border-color: var(--gold);
@@ -1169,95 +1229,231 @@
             line-height: 1.7;
         }
 
-        .realm-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: clamp(1rem, 2.5vw, 1.5rem);
-            max-width: 900px;
-            margin: 0 auto clamp(2rem, 4vw, 3rem);
-        }
-
-        .realm-card {
+        /* THE EPIC S-MAP REDESIGN */
+        .epic-s-map {
             position: relative;
-            padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 2.5vw, 2rem);
-            background: linear-gradient(135deg, rgba(10, 22, 40, 0.9), rgba(5, 13, 26, 0.95));
-            border: 1px solid rgba(200, 168, 75, 0.2);
-            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
-            transition: all 0.4s;
-            opacity: 0;
-            transform: translateY(40px);
-            overflow: hidden;
+            max-width: 1000px;
+            height: 950px;
+            margin: 4rem auto 2rem;
         }
 
-        .realm-card::before {
-            content: '';
+        .map-curve-1,
+        .map-glow-1 {
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(200, 168, 75, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
+            top: 100px;
+            left: 15%;
+            right: 15%;
+            height: 220px;
+            border: 4px dotted rgba(200, 168, 75, 0.5);
+            /* Glowing gold */
+            border-left: none;
+            /* Only draw Top, Right, Bottom */
+            border-radius: 0 150px 150px 0;
+            z-index: 0;
         }
 
-        .realm-card::after {
-            content: '';
+        .map-glow-1 {
+            border-color: var(--cyan);
+            filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.6));
+            border-style: solid;
+            opacity: 0.2;
+        }
+
+        .map-curve-2,
+        .map-glow-2 {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 316px;
+            /* 100 + 220 - 4px overlap */
+            left: 15%;
+            right: 15%;
+            height: 360px;
+            border: 4px dotted rgba(200, 168, 75, 0.5);
+            border-right: none;
+            border-top: none;
+            /* Continues perfectly leftwards and down */
+            border-radius: 150px 0 0 150px;
+            z-index: 0;
+        }
+
+        .map-glow-2 {
+            border-color: var(--cyan);
+            filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.6));
+            border-style: solid;
+            opacity: 0.2;
+        }
+
+        .map-animated-dash {
+            animation: pulsePath 3s infinite alternate;
+        }
+
+        @keyframes pulsePath {
+            0% {
+                filter: drop-shadow(0 0 5px rgba(200, 168, 75, 0.3));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 15px rgba(200, 168, 75, 0.8));
+            }
+        }
+
+        .map-node-wrapper {
+            position: absolute;
+            z-index: 3;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .map-marker {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #0a1628, #040914);
+            border: 3px solid var(--cyan);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.3), inset 0 0 12px rgba(0, 212, 255, 0.4);
+            position: relative;
+            z-index: 4;
+            line-height: 1;
+        }
+
+        .map-card {
+            position: absolute;
+            width: 320px;
+            background: transparent;
+            border: none;
+            padding: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            z-index: 3;
+            opacity: 0;
+            /* GSAP reveals */
+            transform: translateY(30px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Specific Placements tied to IDs */
+        #mn-1 {
+            top: 100px;
+            left: 15%;
+        }
+
+        #mn-1 .realm-card {
+            bottom: 65px;
+            left: 50%;
+            margin-left: -160px;
+            margin-bottom: 0px;
+        }
+
+        #mn-2 {
+            top: 320px;
+            left: 65%;
+        }
+
+        #mn-2 .realm-card {
+            top: 65px;
+            left: 50%;
+            margin-left: -160px;
+            margin-top: 0px;
+        }
+
+        #mn-3 {
+            top: 676px;
+            left: 15%;
+        }
+
+        #mn-3 .realm-card {
+            bottom: 65px;
+            left: 50%;
+            margin-left: -160px;
+            margin-bottom: 0px;
+        }
+
+        #mn-4 {
+            top: 676px;
+            left: 80%;
+        }
+
+        #mn-4 .realm-card {
+            top: 65px;
+            left: 50%;
+            margin-left: -160px;
+            margin-top: 0px;
+        }
+
+        .mc-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .mc-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            text-shadow: 0 0 15px rgba(200, 168, 75, 0.6);
+            font-weight: 700;
+            line-height: 1.3;
+            text-align: center;
             width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-            opacity: 0.4;
         }
+
+        .mc-cost {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--cyan);
+            border: 1px dashed rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.05);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .mc-desc {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.05rem;
+            color: rgba(232, 244, 248, 0.95);
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+        }
+
+        .mc-tip {
+            display: inline-block;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            color: var(--midnight);
+            background: var(--gold);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-style: italic;
+            font-weight: 600;
+            border: none;
+            box-shadow: 0 0 10px rgba(200, 168, 75, 0.3);
+        }
+
+        .mc-loc {
+            display: none;
+        }
+
+        /* Removed redundant text for cleaner unboxed layout */
 
         .realm-card:hover {
-            border-color: rgba(200, 168, 75, 0.45);
-            box-shadow: 0 0 30px rgba(200, 168, 75, 0.15), inset 0 0 30px rgba(200, 168, 75, 0.05);
-            transform: translateY(-5px);
-        }
-
-        .realm-card:hover::before {
-            opacity: 1;
-        }
-
-        .realm-card-icon {
-            font-size: clamp(1.8rem, 3vw, 2.2rem);
-            margin-bottom: 0.75rem;
-            display: block;
-        }
-
-        .realm-card-title {
-            font-family: 'Cinzel Decorative', serif;
-            font-size: clamp(1rem, 1.8vw, 1.3rem);
-            color: var(--gold);
-            text-shadow: 0 0 20px rgba(200, 168, 75, 0.3);
-            margin-bottom: 0.5rem;
-        }
-
-        .realm-card-route {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: clamp(0.8rem, 1.2vw, 0.95rem);
-            color: rgba(232, 244, 248, 0.65);
-            font-weight: 400;
-            margin-bottom: 0.75rem;
-            line-height: 1.5;
-        }
-
-        .realm-card-meta {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: clamp(0.65rem, 1vw, 0.75rem);
-            color: var(--gold);
-            letter-spacing: 0.15em;
-            margin-bottom: 0.75rem;
-            opacity: 0.85;
-        }
-
-        .realm-card-quip {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: clamp(0.6rem, 0.9vw, 0.7rem);
-            color: var(--cyan);
-            letter-spacing: 0.15em;
-            opacity: 0.6;
-            font-style: italic;
+            transform: translateY(-5px) !important;
+            border-color: transparent;
+            box-shadow: none;
         }
 
         .realm-wisdom {
@@ -1267,6 +1463,71 @@
             color: rgba(232, 244, 248, 0.4);
             letter-spacing: 0.2em;
             text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .epic-s-map {
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 2.5rem;
+                padding-left: 55px;
+                /* room for straight line */
+                margin: 3rem auto;
+            }
+
+            .map-curve-1,
+            .map-curve-2,
+            .map-glow-1,
+            .map-glow-2 {
+                display: none;
+            }
+
+            .epic-s-map::before {
+                content: '';
+                position: absolute;
+                top: 20px;
+                bottom: 20px;
+                left: 30px;
+                width: 3px;
+                background: linear-gradient(180deg, var(--gold), var(--cyan), var(--gold));
+                opacity: 0.6;
+                box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+            }
+
+            .map-node-wrapper {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .map-marker {
+                transform: translateX(-56.5px);
+                /* pull icon onto the line perfectly */
+                flex-shrink: 0;
+                width: 50px;
+                height: 50px;
+                font-size: 1.4rem;
+                background: #040914;
+            }
+
+            .realm-card {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                transform: none !important;
+                margin: 0 !important;
+                margin-left: -50px !important;
+                /* pull card left slightly */
+                width: 100%;
+                max-width: none;
+            }
         }
 
         /* HALL OF SAGAS */
@@ -1349,10 +1610,23 @@
         }
 
         @keyframes sagaShimmerTravel {
-            0% { left: -120px; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { left: calc(100% + 120px); opacity: 0; }
+            0% {
+                left: -120px;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: calc(100% + 120px);
+                opacity: 0;
+            }
         }
 
         .saga-viewport {
@@ -1717,8 +1991,15 @@
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
-            10% { opacity: 1; }
-            90% { opacity: 0.5; }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 0.5;
+            }
+
             100% {
                 transform: translateY(-10vh) rotate(360deg);
                 opacity: 0;
@@ -1956,6 +2237,7 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
+
             *,
             *::before,
             *::after {
@@ -1981,9 +2263,12 @@
 
         /* ANIMATED GLOW PULSE */
         @keyframes glowPulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 0 20px rgba(200, 168, 75, 0.3);
             }
+
             50% {
                 box-shadow: 0 0 40px rgba(200, 168, 75, 0.6);
             }
@@ -2042,7 +2327,9 @@
             <li><a href="#events">Events</a></li>
             <li><a href="#reach-realm">Location</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li class="nav-link-mobile-only" style="display:none;"><a href="#events" class="btn-rune btn-rune-primary" style="display:inline-block;text-decoration:none;padding:0.8rem 2rem;">Register for Samarthya</a></li>
+            <li class="nav-link-mobile-only" style="display:none;"><a href="#events" class="btn-rune btn-rune-primary"
+                    style="display:inline-block;text-decoration:none;padding:0.8rem 2rem;">Register for Samarthya</a>
+            </li>
         </ul>
         <a href="#events" class="nav-register nav-register-bar btn-rune">Register for Samarthya</a>
         <div class="hamburger" id="hamburger">
@@ -2166,7 +2453,8 @@
             <div class="arena-group" id="arena-folkvangr"></div>
 
             <div class="events-register-wrap">
-                <a href="Rules/Samarthya26_Rulebook.pdf" download class="btn-rune btn-rune-primary">Download Rulebook</a>
+                <a href="Rules/Samarthya26_Rulebook.pdf" download class="btn-rune btn-rune-primary">Download
+                    Rulebook</a>
             </div>
         </div>
     </section>
@@ -2183,38 +2471,78 @@
         <div class="section-shell">
             <div class="section-eyebrow">ᚱ ᛖ ᚨ ᚲ ᚺ · ᛏ ᚺ ᛖ · ᚱ ᛖ ᚨ ᛚ ᛗ</div>
             <h2 class="section-title">Reach the Realm</h2>
-            <p class="realm-intro">The path from Bengaluru to the Arena of Tumakuru spans ~70 km, taking 1–2 hours depending on your chosen steed.</p>
-            <div class="realm-grid">
-                <div class="realm-card">
-                    <span class="realm-card-icon">⚔️</span>
-                    <div class="realm-card-title">Iron Serpent (TRAIN)</div>
-                    <div class="realm-card-route">Train from KSR Bengaluru / Yesvantpur</div>
-                    <div class="realm-card-meta">45–60 mins · ₹55–₹175</div>
-                    <div class="realm-card-quip">Even Thor approves.</div>
+            <p class="realm-intro">Surviving the journey from Midgard to the Arena is your first true trial.</p>
+
+            <div class="epic-s-map">
+                <!-- Glowing S-Curve -->
+                <div class="map-curve-1 map-animated-dash"></div>
+                <div class="map-glow-1"></div>
+                <div class="map-curve-2 map-animated-dash"></div>
+                <div class="map-glow-2"></div>
+
+                <!-- Node 1 -->
+                <div class="map-node-wrapper" id="mn-1">
+                    <div class="map-marker">📍</div>
+                    <div class="map-card realm-card">
+                        <div class="mc-header">
+                            <span class="mc-title">The Grand Arrival</span>
+                            <span class="mc-cost">START</span>
+                        </div>
+                        <span class="mc-loc">Tumkur Stations</span>
+                        <p class="mc-desc">Survived IRCTC or a bumpy KSRTC bus to reach Midgard (Tumakuru)? Great.
+                            Stretch your spine, grab some air, and prepare for phase two.</p>
+                        <div class="mc-tip">Trial One: Completed.</div>
+                    </div>
                 </div>
-                <div class="realm-card">
-                    <span class="realm-card-icon">🛡️</span>
-                    <div class="realm-card-title">Highway Caravan (BUS)</div>
-                    <div class="realm-card-route">Bus from Majestic / Anand Rao Circle</div>
-                    <div class="realm-card-meta">1–1.5 hrs · ₹200–₹900</div>
-                    <div class="realm-card-quip">A Viking endurance ride.</div>
+
+                <!-- Node 2 -->
+                <div class="map-node-wrapper" id="mn-2">
+                    <div class="map-marker">🚌</div>
+                    <div class="map-card realm-card">
+                        <div class="mc-header">
+                            <span class="mc-title">The Iron Chariots</span>
+                            <span class="mc-cost">CHEAPEST</span>
+                        </div>
+                        <span class="mc-loc">City Bus</span>
+                        <p class="mc-desc">Walk to the city bus stand. Spot the roaring metal beasts heading to
+                            <b>Hebbur</b> or <b>Gulur</b>. Toss 15 coins to the conductor and brace for maximum
+                            turbulence.
+                        </p>
+                        <div class="mc-tip">Drops you right at our gates!</div>
+                    </div>
                 </div>
-                <div class="realm-card">
-                    <span class="realm-card-icon">🐎</span>
-                    <div class="realm-card-title">Private Chariot (CAB/CAR)</div>
-                    <div class="realm-card-route">Cab or personal vehicle via NH48</div>
-                    <div class="realm-card-meta">1.5–2 hrs · ₹1200+</div>
-                    <div class="realm-card-quip">Fuel now costs dragon gold.</div>
+
+                <!-- Node 3 -->
+                <div class="map-node-wrapper" id="mn-3">
+                    <div class="map-marker">🛺</div>
+                    <div class="map-card realm-card">
+                        <div class="mc-header">
+                            <span class="mc-title">Three-Wheeled Dragons</span>
+                            <span class="mc-cost">FASTEST</span>
+                        </div>
+                        <span class="mc-loc">Auto Rickshaws</span>
+                        <p class="mc-desc">Missed the bus? Awaken a sleeping Auto Rickshaw. Warn the rider you seek
+                            SSIT. Prepare to barter your soul for a fair price.</p>
+                        <div class="mc-tip">Speech Level 100 recommended.</div>
+                    </div>
                 </div>
-                <div class="realm-card">
-                    <span class="realm-card-icon">🪓</span>
-                    <div class="realm-card-title">Questionable Path (Rickshaw)</div>
-                    <div class="realm-card-route">Auto or Metro + Bus</div>
-                    <div class="realm-card-meta">Wallet survival not guaranteed</div>
-                    <div class="realm-card-quip">For the truly fearless.</div>
+
+                <!-- Node 4 -->
+                <div class="map-node-wrapper" id="mn-4">
+                    <div class="map-marker">🚶</div>
+                    <div class="map-card realm-card">
+                        <div class="mc-header">
+                            <span class="mc-title">Einherjar's March</span>
+                            <span class="mc-cost">~4 KM</span>
+                        </div>
+                        <span class="mc-loc">Walking</span>
+                        <p class="mc-desc">Reject modern transport entirely. March 4+ km in the raging sun. Marvelous
+                            for burning mead calories and proving to Odin you're unhinged.</p>
+                        <div class="mc-tip">For the purely godly.</div>
+                    </div>
                 </div>
             </div>
-            <p class="realm-wisdom">The Realm awaits, warrior. Skål and travel safe.</p>
+            <p class="realm-wisdom">The Arena awaits, warrior. Skål and travel safe.</p>
         </div>
     </section>
 
@@ -2253,7 +2581,8 @@
         <div class="section-shell">
             <div class="section-eyebrow">ᚺ ᚨ ᛚ ᛚ · ᛟ ᚠ · ᛋ ᚨ ᚷ ᚨ ᛋ</div>
             <h2 class="section-title">Hall of Sagas</h2>
-            <p class="sagas-intro">Behold the echoes of past arenas — the warriors, the victories, the memories forged in the fires of IEEE-SSIT-SB Realm.</p>
+            <p class="sagas-intro">Behold the echoes of past arenas — the warriors, the victories, the memories forged
+                in the fires of IEEE-SSIT-SB Realm.</p>
             <div class="saga-frame" id="saga-frame">
                 <div class="saga-shimmer"></div>
                 <div class="saga-viewport" id="saga-viewport"></div>
@@ -2271,9 +2600,12 @@
         <div class="footer-title">SAMARTHYA 2026</div>
         <div class="footer-org">IEEE SSIT Student Branch</div>
         <div class="footer-socials">
-            <a href="https://www.instagram.com/ieeesb_ssit/" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram">IG</a>
-            <a href="https://www.linkedin.com/in/ieee-sb-ssit-a87876249/" target="_blank" rel="noopener noreferrer" class="social-icon" title="LinkedIn">in</a>
-            <a href="https://ieeessit.github.io/ieeesbwebtest1/" target="_blank" rel="noopener noreferrer" class="social-icon" title="IEEE-SSIT-SB Website">IEEE</a>
+            <a href="https://www.instagram.com/ieeesb_ssit/" target="_blank" rel="noopener noreferrer"
+                class="social-icon" title="Instagram">IG</a>
+            <a href="https://www.linkedin.com/in/ieee-sb-ssit-a87876249/" target="_blank" rel="noopener noreferrer"
+                class="social-icon" title="LinkedIn">in</a>
+            <a href="https://ieeessit.github.io/ieeesbwebtest1/" target="_blank" rel="noopener noreferrer"
+                class="social-icon" title="IEEE-SSIT-SB Website">IEEE</a>
         </div>
         <div class="footer-details">
             SSIT, Tumakuru &nbsp;·&nbsp; 22 – 23 April 2026<br>
@@ -2302,7 +2634,7 @@
             <button class="rulebook-back" id="rulebook-back">← Back</button>
             <div class="rulebook-title" id="rulebook-title">Rulebook</div>
             <img src="Rules/placeholder.png" alt="Event Rulebook" class="rulebook-img" id="rulebook-img"
-                 onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<p style=\'text-align:center;color:rgba(232,244,248,0.5);padding:3rem;font-family:Rajdhani,sans-serif;\'>Rulebook coming soon...</p>');">
+                onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<p style=\'text-align:center;color:rgba(232,244,248,0.5);padding:3rem;font-family:Rajdhani,sans-serif;\'>Rulebook coming soon...</p>');">
         </div>
     </div>
 
@@ -2338,7 +2670,7 @@
         const societies = [
             { name: 'IEEE', file: 'IEEE MB Logo.png' },
             { name: 'IEEE Bangalore Section', file: 'IEEE Bangalore Section.png' },
-            { name: 'IEEE SSIT SB', file: 'IEEE SSIT SB Logo.png'},
+            { name: 'IEEE SSIT SB', file: 'IEEE SSIT SB Logo.png' },
             { name: 'IEEE Women in Engineering', file: 'IEEE WIE Logo.png' },
             { name: 'IEEE Sensors Council', file: 'IEEE Sensors Council Logo.png' },
             { name: 'IEEE Computer Society', file: 'IEEE CS Logo.png' },
@@ -2933,6 +3265,7 @@
         });
     </script>
     <script src="Js/loader.js"></script>
+    <script src="Js/mobile-fix.js"></script>
 
 </body>
 
