@@ -165,11 +165,26 @@ html {
     #welcome-norse {
         padding-left: 1rem;
         padding-right: 1rem;
+        padding-top: 60px;
+        padding-bottom: 60px;
+        min-height: auto;
+    }
+
+    /* Center the Yggdrasil background image on mobile */
+    #welcome-norse::before {
+        background-size: 70%;
+        background-position: center center;
     }
 
     .welcome-container {
         max-width: 100%;
         overflow: hidden;
+    }
+
+    .welcome-text {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        padding: 0 0.25rem;
     }
 
     /* ------------------------------------------------------------------
