@@ -1567,7 +1567,7 @@
             margin: 0 auto clamp(1.5rem, 3vw, 2.5rem);
             aspect-ratio: 16 / 9;
             background: linear-gradient(135deg, rgba(8, 16, 32, 0.95), rgba(3, 8, 18, 0.98));
-            border: 2px solid rgba(200, 168, 75, 0.35);
+            border: none;
             clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
             overflow: hidden;
             box-shadow:
@@ -1580,7 +1580,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            border: 1px solid rgba(200, 168, 75, 0.1);
+            border: 2px solid rgba(200, 168, 75, 0.35);
             clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
             pointer-events: none;
             z-index: 5;
@@ -1668,6 +1668,7 @@
             object-position: center;
             display: block;
             filter: brightness(0.85) contrast(1.05);
+            transform: scale(1.05);
         }
 
         .saga-vignette {
@@ -3213,8 +3214,11 @@
                 slides[prev].classList.add('leaving');
 
                 slides[current].classList.remove('leaving');
+                slides[current].style.transition = 'none';
                 slides[current].style.transform = 'translateX(60px)';
                 void slides[current].offsetWidth;
+                slides[current].style.transition = '';
+                slides[current].style.transform = '';
                 slides[current].classList.add('active');
 
                 counter.textContent = pad(current + 1) + ' / ' + pad(total);
