@@ -2333,6 +2333,34 @@
             { id: 'folkvangr', norse: 'Folkvangr', common: 'Fun Games', rune: 'ᛊ', arena: 'folkvangr', dateLabel: '22 & 23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: true, imagePath: 'Assets/folkvangr.png', hasRulebook: false, hasRegistration: false, desc: 'Enter the field of the people — where joy and camaraderie reign. Games include: Arm Wrestling, Musical Chairs, Tug of War, Sack Race, and many more. Offline registrations on spot.' }
         ];
 
+        // Expose events for register-locks.js
+        window._samEvents = events;
+
+        // Build conflict map for lock system
+        (function(){
+            const EX = ['helheim','mimir','folkvangr'];
+            const timings = {
+                valhalla:{d:1,s:540,e:660}, helheim:{d:1,s:540,e:900}, saga:{d:1,s:675,e:735},
+                eitri:{d:1,s:740,e:840}, seidr:{d:1,s:750,e:810}, runes:{d:1,s:750,e:810},
+                runecraft:{d:1,s:540,e:660}, bifrost:{d:1,s:870,e:1050},
+                volva:{d:2,s:540,e:660}, yggdrasil:{d:2,s:540,e:660}, mimir:{d:2,s:600,e:720},
+                jotunn:{d:2,s:780,e:900}, sleipnir:{d:2,s:780,e:900},
+                loki:{d:2,s:900,e:1020}, skald:{d:2,s:900,e:990}, folkvangr:{d:0,s:0,e:0}
+            };
+            const cm = {};
+            events.forEach(a => {
+                cm[a.id] = [];
+                if(EX.includes(a.id)) return;
+                const ta = timings[a.id]; if(!ta||ta.d===0) return;
+                events.forEach(b => {
+                    if(a.id===b.id||EX.includes(b.id)) return;
+                    const tb = timings[b.id]; if(!tb||tb.d!==ta.d) return;
+                    if(ta.s < tb.e && tb.s < ta.e) cm[a.id].push(b.id);
+                });
+            });
+            window._samConflictMap = cm;
+        })();
+
         // =============================================
         // LOGO / SOCIETIES DATA
         // =============================================
@@ -2490,7 +2518,7 @@
             } else {
                 let btns = '';
                 if (ev.hasRegistration) {
-                    btns += `<a href="#" class="btn-rune btn-rune-primary" onclick="event.preventDefault(); alert('Registration page coming soon for ${ev.norse}!');">Register</a>`;
+                    btns += `<a href="#" class="btn-rune btn-rune-primary" onclick="event.preventDefault(); closeModal(); samHandleRegister('${ev.id}');">Register</a>`;
                 }
                 if (ev.hasRulebook) {
                     btns += `<button class="btn-rune btn-rune-outline" onclick="openRulebook('${ev.norse}')">Rulebook</button>`;
@@ -2935,6 +2963,7 @@
     </script>
     <script src="Js/loader.js"></script>
     <script src="Js/mobile-fix.js"></script>
+    <script src="Js/events/register-locks.js"></script>
 
 </body>
 

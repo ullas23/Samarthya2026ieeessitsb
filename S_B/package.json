@@ -1,0 +1,12 @@
+{
+  "name": "samarthya2026",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Samarthya 2026 — IEEE SSIT SB Technical Fest Backend",
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {
+    "googleapis": "^131.0.0",
+    "nodemailer": "^6.9.8",
+    "busboy": "^1.6.0"
+  }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Samarthya 2026</title>
+    <meta name="description" content="Event registration for Samarthya 2026 — IEEE SSIT Student Branch Technical Fest.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Css/register.css">
+</head>
+<body class="reg-page">
+
+    <!-- Back navigation -->
+    <a href="index.html#events" class="reg-back">← Back to Events</a>
+
+    <!-- Event Header (populated by JS) -->
+    <div class="reg-header">
+        <div id="reg-event-rune" class="reg-header-rune"></div>
+        <h1 id="reg-event-norse" class="reg-header-norse"></h1>
+        <div id="reg-event-common" class="reg-header-common"></div>
+        <div id="reg-event-meta" class="reg-header-meta"></div>
+        <div id="reg-team-note" class="reg-team-note"></div>
+    </div>
+
+    <!-- Form Section -->
+    <div id="reg-form-section">
+        <div id="reg-form-wrap" class="reg-form-container" style="display:none;">
+
+            <!-- Error Banner -->
+            <div id="form-error-banner" class="reg-error-banner"></div>
+
+            <form id="reg-form" novalidate>
+
+                <!-- Dynamic Member Fields -->
+                <div id="reg-members-container"></div>
+
+                <!-- Add/Remove Controls -->
+                <div class="reg-member-controls">
+                    <button type="button" id="reg-add-member" class="reg-member-btn" style="display:none;">
+                        + Add Member
+                    </button>
+                    <button type="button" id="reg-remove-member" class="reg-member-btn" style="display:none;">
+                        − Remove Member
+                    </button>
+                </div>
+                <div id="reg-member-count" class="reg-member-count"></div>
+
+                <div class="reg-divider"></div>
+
+                <!-- City -->
+                <div class="reg-member-block">
+                    <div class="reg-member-label">Location</div>
+                    <div class="reg-field-group">
+                        <label class="reg-label" for="reg_city">City</label>
+                        <input type="text" id="reg_city" class="reg-input" placeholder="Your city" autocomplete="address-level2">
+                    </div>
+                </div>
+
+                <div class="reg-divider"></div>
+
+                <!-- Payment Section -->
+                <div class="reg-payment-section">
+                    <div class="reg-payment-title">Payment</div>
+                    <p style="font-size:0.75rem;color:rgba(232,244,248,0.45);margin-bottom:1rem;font-family:'Share Tech Mono',monospace;letter-spacing:0.1em;">Scan the QR code to make payment</p>
+                    <img src="Assets/payment_qr.png" alt="Payment QR Code" class="reg-qr-img" onerror="this.style.display='none';">
+
+                    <div class="reg-divider"></div>
+
+                    <!-- Screenshot Upload -->
+                    <div class="reg-field-group" style="text-align:left;">
+                        <label class="reg-label">Payment Screenshot</label>
+                        <div class="reg-file-wrap">
+                            <div class="reg-file-btn">Choose File</div>
+                            <span id="reg-screenshot-label" class="reg-file-label">Choose payment screenshot…</span>
+                            <input type="file" id="reg_screenshot" class="reg-file-input" accept="image/jpeg,image/png,image/jpg">
+                        </div>
+                        <div style="font-size:0.6rem;color:rgba(232,244,248,0.3);margin-top:0.3rem;font-family:'Share Tech Mono',monospace;">JPG, JPEG, PNG · Max 5 MB</div>
+                    </div>
+
+                    <!-- UTR -->
+                    <div class="reg-field-group" style="text-align:left;margin-top:0.75rem;">
+                        <label class="reg-label" for="reg_utr">UTR Number</label>
+                        <input type="text" id="reg_utr" class="reg-input" placeholder="12-digit UTR number" maxlength="12" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" id="reg-submit-btn" class="reg-submit-btn">
+                    <span id="reg-submit-spinner" class="reg-spinner"></span>
+                    <span id="reg-submit-text">Submit Registration</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Section (hidden, populated by JS) -->
+    <div id="reg-success-section" style="display:none;"></div>
+
+    <!-- Footer -->
+    <div style="text-align:center;padding:2rem 1rem;border-top:1px solid rgba(200,168,75,0.08);">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:rgba(232,244,248,0.25);letter-spacing:0.15em;">SAMARTHYA 2026 · IEEE SSIT STUDENT BRANCH · SSIT, TUMAKURU</div>
+    </div>
+
+    <!-- JS — order matters: ui → form → locks → page controller -->
+    <script src="Js/register/register-ui.js"></script>
+    <script src="Js/register/register-form.js"></script>
+    <script src="Js/events/register-locks.js"></script>
+    <script src="Js/register/register-page.js"></script>
+
+</body>
+</html>
