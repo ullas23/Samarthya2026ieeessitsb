@@ -1,10 +1,6 @@
 {
-  "name": "samarthya-2026-backend",
+  "name": "samarthya-2026",
   "version": "1.0.0",
-  "description": "Backend API for Samarthya 2026 - Forge of Innovation",
-  "private": true,
-  "dependencies": {
-    "googleapis": "^131.0.0",
-    "jsonwebtoken": "^9.0.3"
-  }
+  "description": "Static frontend for Samarthya 2026",
+  "private": true
 }
