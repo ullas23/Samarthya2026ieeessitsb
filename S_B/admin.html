@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Samarthya 2026</title>
+    <meta name="description" content="Admin dashboard for Samarthya 2026 — IEEE SSIT Student Branch Technical Fest.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight: #020408;
+            --navy: #050d1a;
+            --frost: #e8f4f8;
+            --cyan: #00d4ff;
+            --gold: #c8a84b;
+            --gold2: #f0d080;
+            --gold-glow: rgba(200, 168, 75, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--midnight);
+            color: var(--frost);
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── Header ────────────────────── */
+        .admin-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(200,168,75,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: linear-gradient(180deg, rgba(10,22,40,0.6), transparent);
+        }
+        .admin-logo {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: var(--gold);
+            text-shadow: 0 0 20px var(--gold-glow);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+        }
+        .admin-logo span {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+            letter-spacing: 0.3em;
+            display: block;
+            margin-top: 0.2rem;
+        }
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .admin-btn {
+            padding: 0.5rem 1.2rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid rgba(232,244,248,0.2);
+            background: transparent;
+            color: var(--frost);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .admin-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* ── Login Screen ──────────────── */
+        .login-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 2rem;
+        }
+        .login-card {
+            max-width: 400px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(10,22,40,0.98), rgba(5,13,26,0.99));
+            border: 1px solid rgba(200,168,75,0.3);
+            border-radius: 12px;
+            padding: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+        }
+        .login-rune {
+            font-size: 2.5rem;
+            color: var(--gold);
+            text-shadow: 0 0 30px var(--gold-glow);
+            margin-bottom: 1rem;
+        }
+        .login-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+        .login-subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: rgba(232,244,248,0.4);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .login-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(5,13,26,0.8);
+            border: 1px solid rgba(232,244,248,0.12);
+            border-radius: 4px;
+            color: var(--frost);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 1rem;
+        }
+        .login-input:focus {
+            border-color: rgba(200,168,75,0.5);
+            box-shadow: 0 0 12px rgba(200,168,75,0.1);
+        }
+        .login-submit {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--gold), #8b6a1a);
+            color: var(--midnight);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .login-submit:hover:not(:disabled) {
+            box-shadow: 0 0 25px rgba(200,168,75,0.35);
+            transform: translateY(-1px);
+        }
+        .login-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .login-error {
+            display: none;
+            color: #ff6b6b;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Dashboard ─────────────────── */
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+
+        .dash-toolbar {
+            padding: 1.25rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            border-bottom: 1px solid rgba(200,168,75,0.08);
+            background: rgba(5,13,26,0.3);
+        }
+        .dash-search {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.55rem 0.85rem;
+            background: rgba(5,13,26,0.8);
+            border: 1px solid rgba(232,244,248,0.12);
+            border-radius: 4px;
+            color: var(--frost);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .dash-search:focus {
+            border-color: rgba(200,168,75,0.4);
+        }
+        .dash-filter {
+            padding: 0.55rem 0.85rem;
+            background: rgba(5,13,26,0.8);
+            border: 1px solid rgba(232,244,248,0.12);
+            border-radius: 4px;
+            color: var(--frost);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 140px;
+        }
+        .dash-filter option {
+            background: var(--navy);
+            color: var(--frost);
+        }
+        .dash-count {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: rgba(232,244,248,0.4);
+            letter-spacing: 0.1em;
+        }
+
+        /* ── Table ─────────────────────── */
+        .dash-table-wrap {
+            overflow-x: auto;
+            padding: 1rem;
+        }
+        .dash-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+        .dash-table thead th {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: rgba(232,244,248,0.5);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 0.75rem 0.6rem;
+            border-bottom: 1px solid rgba(200,168,75,0.15);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            background: var(--midnight);
+        }
+        .dash-table tbody tr {
+            transition: background 0.2s;
+        }
+        .dash-table tbody tr:hover {
+            background: rgba(200,168,75,0.03);
+        }
+        .dash-table tbody td {
+            padding: 0.6rem;
+            font-size: 0.85rem;
+            color: rgba(232,244,248,0.75);
+            border-bottom: 1px solid rgba(232,244,248,0.04);
+            vertical-align: top;
+        }
+        .dash-event-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background: rgba(200,168,75,0.1);
+            border: 1px solid rgba(200,168,75,0.2);
+            border-radius: 3px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--gold);
+            letter-spacing: 0.08em;
+        }
+        .dash-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .dash-status.confirmed { color: #5ce08e; }
+        .dash-status.pending { color: #ffa41c; }
+
+        .dash-time {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: rgba(232,244,248,0.4);
+        }
+
+        .dash-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(232,244,248,0.4);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+        }
+
+        .dash-loading {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: rgba(232,244,248,0.3);
+        }
+        .dash-loading-spinner {
+            display: inline-block;
+            width: 24px; height: 24px;
+            border: 2px solid rgba(200,168,75,0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: admin-spin 0.7s linear infinite;
+            margin-bottom: 0.75rem;
+        }
+        @keyframes admin-spin { to { transform: rotate(360deg); } }
+
+        /* ── Footer ────────────────────── */
+        .admin-footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(200,168,75,0.08);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: rgba(232,244,248,0.2);
+            letter-spacing: 0.15em;
+        }
+
+        /* ── Responsive ────────────────── */
+        @media (max-width: 768px) {
+            .admin-header { padding: 1rem; }
+            .dash-toolbar { padding: 1rem; }
+            .dash-table-wrap { padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header" id="admin-header">
+        <a href="index.html" class="admin-logo">
+            Samarthya 2026
+            <span>Admin Dashboard</span>
+        </a>
+        <div class="admin-actions" id="admin-header-actions">
+            <a href="index.html" class="admin-btn">← Site</a>
+            <button class="admin-btn" id="logout-btn" style="display:none;">Logout</button>
+        </div>
+    </header>
+
+    <!-- Login Screen -->
+    <div class="login-wrap" id="login-screen">
+        <div class="login-card">
+            <div class="login-rune">ᛟ</div>
+            <div class="login-title">Admin Access</div>
+            <div class="login-subtitle">Samarthya 2026 Backend</div>
+            <form id="login-form">
+                <input type="password" id="login-password" class="login-input"
+                       placeholder="Enter admin password" autocomplete="current-password">
+                <button type="submit" class="login-submit" id="login-submit">
+                    Authenticate
+                </button>
+            </form>
+            <div class="login-error" id="login-error"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard (hidden until auth) -->
+    <div class="dashboard" id="dashboard">
+        <!-- Toolbar -->
+        <div class="dash-toolbar">
+            <input type="text" class="dash-search" id="dash-search"
+                   placeholder="Search registrations…">
+            <select class="dash-filter" id="dash-event-filter">
+                <option value="">All Events</option>
+            </select>
+            <span class="dash-count" id="dash-count">0 registrations</span>
+        </div>
+
+        <!-- Table -->
+        <div class="dash-table-wrap">
+            <div class="dash-loading" id="dash-loading">
+                <div class="dash-loading-spinner"></div>
+                <div>Loading registrations…</div>
+            </div>
+            <table class="dash-table" id="dash-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Timestamp</th>
+                        <th>Event</th>
+                        <th>Participant</th>
+                        <th>USN</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>College</th>
+                        <th>Team</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="dash-tbody"></tbody>
+            </table>
+            <div class="dash-empty" id="dash-empty" style="display:none;">
+                No registrations found
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="admin-footer">
+        SAMARTHYA 2026 · IEEE SSIT STUDENT BRANCH · ADMIN PANEL
+    </div>
+
+    <script src="Js/admin.js"></script>
+</body>
+</html>
