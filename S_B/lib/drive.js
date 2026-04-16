@@ -2,7 +2,7 @@
 const { getDrive } = require('./google-auth');
 const { Readable } = require('stream');
 
-const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '1c2Mjj9piUUYlbeRUSCG0_STdBdL_Jkhp';
+const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || '14a-YUmcbh84CSHMRxyX6LylhcA59zlDH';
 
 async function uploadScreenshot(buffer, filename, mime, regId) {
     const drv = getDrive();

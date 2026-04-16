@@ -1,8 +1,8 @@
 // lib/sheets.js — Google Sheets Integration
 const { getSheets } = require('./google-auth');
 
-const SHEET_ID = process.env.GOOGLE_SHEET_ID || '1bEPaQSgztJ0WSmWYxOmcYiaWbCUwLO52PdVdnoA97p4';
-const TAB = 'Registrations';
+const SHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID || '1_g_dEKemzA0D1KMY1PFDKNdnqXPb4ZOoWYi_IpQqKPM';
+const TAB = 'registrations';
 
 const HEADERS = [
     'Registration ID','Event ID','Event Name','Arena Name','Event Date',

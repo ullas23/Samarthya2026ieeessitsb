@@ -2,7 +2,7 @@
 // lib/google-auth.js — Centralized Google Auth
 // =============================================
 // ENV VARS:
-//   GOOGLE_CLIENT_EMAIL   — service account email
+//   GOOGLE_SERVICE_ACCOUNT_EMAIL — service account email
 //   GOOGLE_PRIVATE_KEY    — service account private key (keep \n)
 // =============================================
 const { google } = require('googleapis');
@@ -11,7 +11,7 @@ let _auth = null;
 
 function getAuth() {
     if (_auth) return _auth;
-    const email = process.env.GOOGLE_CLIENT_EMAIL;
+    const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
     const key = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
     if (!email || !key) return null;
     _auth = new google.auth.JWT(email, null, key, [
