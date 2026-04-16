@@ -82,6 +82,57 @@ module.exports = async (req, res) => {
       return send(res, 409, error('Duplicate registration', 'DUPLICATE', [dupCheck.reason]));
     }
 
+    // ── ClashGroup validation (authoritative lock check) ─
+    if (event.clashGroup) {
+      const clashEvents = events.filter(
+        (e) => e.id !== event.id && e.clashGroup === event.clashGroup
+      );
+      const clashEventIds = clashEvents.map((e) => e.id);
+
+      for (const row of dataRows) {
+        const rowEventId = row[1];
+        if (!clashEventIds.includes(rowEventId)) continue;
+
+        const rowEmail = (row[5] || '').toLowerCase();
+        const rowUSN = (row[4] || '').toUpperCase();
+
+        if (rowEmail === sanitisedBody.email.toLowerCase() ||
+            rowUSN === sanitisedBody.usn.toUpperCase()) {
+          const clashEvent = clashEvents.find((e) => e.id === rowEventId);
+          const clashName = clashEvent ? clashEvent.title : rowEventId;
+          return send(res, 409, error(
+            'Event locked',
+            'CLASH_LOCKED',
+            [`Event locked. Running parallel to ${clashName}, which you have registered for.`]
+          ));
+        }
+
+        // Also check team members
+        if (row[12]) {
+          try {
+            const members = JSON.parse(row[12]);
+            if (Array.isArray(members)) {
+              const memberClash = members.some((m) => {
+                const mEmail = (m.email || '').toLowerCase();
+                const mUSN = (m.usn || '').toUpperCase();
+                return mEmail === sanitisedBody.email.toLowerCase() ||
+                       mUSN === sanitisedBody.usn.toUpperCase();
+              });
+              if (memberClash) {
+                const clashEvent = clashEvents.find((e) => e.id === rowEventId);
+                const clashName = clashEvent ? clashEvent.title : rowEventId;
+                return send(res, 409, error(
+                  'Event locked',
+                  'CLASH_LOCKED',
+                  [`Event locked. Running parallel to ${clashName}, which you have registered for.`]
+                ));
+              }
+            }
+          } catch (e) { /* skip invalid JSON */ }
+        }
+      }
+    }
+
     // ── Append row to Google Sheets ────────────────────────
     await appendRegistration(sanitisedBody, event.title);
 

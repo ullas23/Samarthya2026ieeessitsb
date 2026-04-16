@@ -74,32 +74,30 @@ function validateRegistration(body, event) {
     return { valid: false, errors };
   }
 
-  // --- Solo vs Team mode ---
-  if (event.mode === 'solo') {
-    // Solo events must NOT have team fields
-    if (body.teamName || (body.members && body.members.length > 0)) {
-      errors.push('solo events do not accept team registrations');
-    }
+  // --- Team size & member validation ---
+  const teamSize = body.teamSize ? Number(body.teamSize) : 1;
+  const minSize = event.minTeamSize || 1;
+  const maxSize = event.maxTeamSize || 1;
+
+  if (teamSize < minSize) {
+    errors.push(`Registration requires at least ${minSize} member(s)`);
+  }
+  if (teamSize > maxSize) {
+    errors.push(`Registration allows at most ${maxSize} member(s)`);
   }
 
-  if (event.mode === 'team') {
-    // Team events require teamName and members array
+  // Solo registration (teamSize === 1, no extra members)
+  if (teamSize === 1) {
+    // Solo is valid — no team fields needed
+  }
+
+  // Team registration (teamSize > 1)
+  if (teamSize > 1) {
     if (!body.teamName || sanitize(String(body.teamName)) === '') {
-      errors.push('teamName is required for team events');
+      errors.push('teamName is required for team registrations');
     }
-    if (!Array.isArray(body.members) || body.members.length === 0) {
-      errors.push('members array is required for team events');
-    } else {
-      const teamSize = body.members.length;
-
-      if (teamSize < event.minTeamSize) {
-        errors.push(`team must have at least ${event.minTeamSize} member(s)`);
-      }
-      if (teamSize > event.maxTeamSize) {
-        errors.push(`team must have at most ${event.maxTeamSize} member(s)`);
-      }
-
-      // Validate each member
+    if (Array.isArray(body.members) && body.members.length > 0) {
+      // Validate each additional member
       body.members.forEach((member, index) => {
         if (!member.name || sanitize(String(member.name)) === '') {
           errors.push(`members[${index}].name is required`);

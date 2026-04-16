@@ -4,6 +4,7 @@
   "description": "Backend API for Samarthya 2026 - Forge of Innovation",
   "private": true,
   "dependencies": {
-    "googleapis": "^131.0.0"
+    "googleapis": "^131.0.0",
+    "jsonwebtoken": "^9.0.3"
   }
 }

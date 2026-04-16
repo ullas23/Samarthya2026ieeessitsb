@@ -1,4 +1,5 @@
 // Js/register/register-page.js — Registration Page Controller
+// Enhanced for Phase 2: backend lock precheck + /api/register integration
 (function(){
     'use strict';
     const params = new URLSearchParams(window.location.search);
@@ -81,31 +82,203 @@
             const ssLabel = document.getElementById('reg-screenshot-label');
             if(ssInput&&ssLabel) ssInput.onchange=()=>{ ssLabel.textContent = ssInput.files.length ? ssInput.files[0].name : 'Choose payment screenshot…'; };
 
-            // Form submit
+            // ── Lock precheck on identity blur ──────────────
+            // Once user fills email/USN for team lead (member 0),
+            // trigger a backend lock precheck
+            let lockChecked = false;
+            let lockResult = null;
+
+            async function runLockPrecheck() {
+                const emailEl = document.getElementById('member0_email');
+                const usnEl = document.getElementById('member0_usn');
+                const email = emailEl ? emailEl.value.trim().toLowerCase() : '';
+                const usn = usnEl ? usnEl.value.trim().toUpperCase() : '';
+
+                if (!email && !usn) return; // Not enough identity data
+
+                try {
+                    const params = new URLSearchParams({ eventId });
+                    if (email) params.set('email', email);
+                    if (usn) params.set('usn', usn);
+
+                    const resp = await fetch(`/api/lock-status?${params.toString()}`);
+                    const result = await resp.json();
+
+                    if (result.success && result.data && result.data.locked) {
+                        lockResult = result.data;
+                        lockChecked = true;
+                        // Show lock popup immediately
+                        if (typeof samPopup !== 'undefined') {
+                            samPopup.lock({
+                                registeredEventName: result.data.registeredEventName,
+                                clashGroup: result.data.clashGroup || '',
+                            });
+                        } else {
+                            showErrorPopup('Event Locked',
+                                `Event locked. Running parallel to ${result.data.registeredEventName}, which you have registered for.`);
+                        }
+                    } else {
+                        lockResult = null;
+                        lockChecked = true;
+                    }
+                } catch (e) {
+                    console.warn('[register-page] Lock precheck failed:', e);
+                    lockChecked = false;
+                }
+            }
+
+            // Attach blur handlers for lock precheck
+            setTimeout(() => {
+                const emailEl = document.getElementById('member0_email');
+                const usnEl = document.getElementById('member0_usn');
+                if (emailEl) emailEl.addEventListener('blur', runLockPrecheck);
+                if (usnEl) usnEl.addEventListener('blur', runLockPrecheck);
+            }, 100);
+
+            // ── Form submit → /api/register ─────────────────
             document.getElementById('reg-form').onsubmit = async (e) => {
                 e.preventDefault();
+
+                // Client-side validation
                 const v = validateRegForm(currentCount);
                 if(!v.ok) return;
+
                 setLoading(true);
-                const fd = buildFormData(eventId, currentCount);
+
+                // ── Final lock precheck before submit ───────
+                const emailVal = (document.getElementById('member0_email')?.value || '').trim().toLowerCase();
+                const usnVal = (document.getElementById('member0_usn')?.value || '').trim().toUpperCase();
+
                 try {
-                    const resp = await fetch('/api/register', { method:'POST', body:fd });
-                    const result = await resp.json();
-                    if(result.success){
-                        _addRegistered(eventId);
-                        showSuccess(result);
-                    } else if(result.errors){
-                        showFormError(result.errors[0]);
+                    const lockParams = new URLSearchParams({ eventId });
+                    if (emailVal) lockParams.set('email', emailVal);
+                    if (usnVal) lockParams.set('usn', usnVal);
+
+                    const lockResp = await fetch(`/api/lock-status?${lockParams.toString()}`);
+                    const lockData = await lockResp.json();
+
+                    if (lockData.success && lockData.data && lockData.data.locked) {
                         setLoading(false);
-                    } else if(result.error){
-                        if(result.error.includes('Already Registered')) showErrorPopup('Already Registered!', result.error);
-                        else if(result.error.includes('Invalid UTR')) showErrorPopup('Invalid UTR', result.error);
-                        else if(result.error.includes('locked')) showErrorPopup('Event Locked', result.error);
-                        else showFormError(result.error);
+                        if (typeof samPopup !== 'undefined') {
+                            samPopup.lock({
+                                registeredEventName: lockData.data.registeredEventName,
+                                clashGroup: lockData.data.clashGroup || '',
+                            });
+                        } else {
+                            showErrorPopup('Event Locked',
+                                `Event locked. Running parallel to ${lockData.data.registeredEventName}, which you have registered for.`);
+                        }
+                        return;
+                    }
+                } catch (lockErr) {
+                    console.warn('[register-page] Final lock check failed:', lockErr);
+                    // Continue anyway — backend /api/register has authoritative validation
+                }
+
+                // ── Build JSON payload for /api/register ────
+                // The backend expects JSON with: eventId, participantName, usn,
+                // email, phone, college, branch, semester, teamName, teamSize, members[]
+                const leadName = (document.getElementById('member0_name')?.value || '').trim();
+                const leadPhone = (document.getElementById('member0_phone')?.value || '').trim().replace(/[\s-]/g, '');
+                const leadEmail = (document.getElementById('member0_email')?.value || '').trim().toLowerCase();
+                const leadUSN = (document.getElementById('member0_usn')?.value || '').trim().toUpperCase();
+                const leadCollege = (document.getElementById('member0_college')?.value || '').trim();
+
+                // Build members array (for team events, members beyond the lead)
+                const membersArr = [];
+                for (let i = 1; i < currentCount; i++) {
+                    membersArr.push({
+                        name: (document.getElementById(`member${i}_name`)?.value || '').trim(),
+                        usn: (document.getElementById(`member${i}_usn`)?.value || '').trim().toUpperCase(),
+                        email: (document.getElementById(`member${i}_email`)?.value || '').trim().toLowerCase(),
+                        phone: (document.getElementById(`member${i}_phone`)?.value || '').trim().replace(/[\s-]/g, ''),
+                    });
+                }
+
+                // Determine team name: for multi-member events, use lead name as default
+                const teamName = currentCount > 1 ? (leadName + "'s Team") : '';
+
+                const payload = {
+                    eventId: eventId,
+                    participantName: leadName,
+                    usn: leadUSN,
+                    email: leadEmail,
+                    phone: leadPhone,
+                    college: leadCollege,
+                    branch: 'N/A',
+                    semester: 'N/A',
+                    teamName: teamName,
+                    teamSize: currentCount,
+                    members: membersArr,
+                };
+
+                try {
+                    const resp = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    const result = await resp.json();
+
+                    if(result.success){
+                        // Mark as registered in localStorage
+                        if (typeof _addRegistered === 'function') {
+                            _addRegistered(eventId);
+                        }
+
+                        // Show success using popup or inline UI
+                        if (typeof samPopup !== 'undefined') {
+                            samPopup.success({
+                                eventName: result.data?.eventName || ev.norseName,
+                                participantName: result.data?.participantName || '',
+                                teamName: result.data?.teamName || '',
+                            });
+                        } else {
+                            showSuccess(result);
+                        }
+                    } else if(result.error) {
+                        const errCode = result.error.code || '';
+                        const errDetails = result.error.details || [];
+                        const errMsg = errDetails[0] || result.message || 'Registration failed';
+
+                        if (errCode === 'DUPLICATE') {
+                            if (typeof samPopup !== 'undefined') {
+                                samPopup.duplicate(ev.norseName || ev.commonName);
+                            } else {
+                                showErrorPopup('Already Registered!', errMsg);
+                            }
+                        } else if (errCode === 'CLASH_LOCKED') {
+                            if (typeof samPopup !== 'undefined') {
+                                samPopup.lock({ registeredEventName: errMsg });
+                            } else {
+                                showErrorPopup('Event Locked', errMsg);
+                            }
+                        } else if (errCode === 'INVALID_INPUT') {
+                            if (typeof samPopup !== 'undefined') {
+                                samPopup.validation(errMsg);
+                            } else {
+                                showFormError(errMsg);
+                            }
+                        } else {
+                            if (typeof samPopup !== 'undefined') {
+                                samPopup.error('Registration Failed', errMsg);
+                            } else {
+                                showFormError(errMsg);
+                            }
+                        }
+                        setLoading(false);
+                    } else {
+                        // Unexpected response shape
+                        showFormError('Unexpected response from server. Please try again.');
                         setLoading(false);
                     }
                 } catch(err){
-                    showFormError('Network error. Please check your connection and try again.');
+                    console.error('[register-page] Submit error:', err);
+                    if (typeof samPopup !== 'undefined') {
+                        samPopup.network();
+                    } else {
+                        showFormError('Network error. Please check your connection and try again.');
+                    }
                     setLoading(false);
                 }
             };
@@ -115,6 +288,9 @@
         })
         .catch(err=>{
             console.error(err);
+            if (typeof samPopup !== 'undefined') {
+                samPopup.network();
+            }
             formSec.innerHTML='<div style="text-align:center;padding:4rem 1rem;color:rgba(232,244,248,0.6);">Failed to load event data. Please try again.</div>';
         });
 })();
