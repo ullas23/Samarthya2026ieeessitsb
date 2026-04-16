@@ -6,13 +6,14 @@
 //   GOOGLE_PRIVATE_KEY    — service account private key (keep \n)
 // =============================================
 const { google } = require('googleapis');
+const { parsePrivateKey } = require('../backend/config');
 
 let _auth = null;
 
 function getAuth() {
     if (_auth) return _auth;
     const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-    const key = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
+    const key = parsePrivateKey(process.env.GOOGLE_PRIVATE_KEY);
     if (!email || !key) return null;
     _auth = new google.auth.JWT(email, null, key, [
         'https://www.googleapis.com/auth/spreadsheets',

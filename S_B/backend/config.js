@@ -5,17 +5,51 @@
  * Exports a single config object used by other backend modules.
  */
 
+function parsePrivateKey(raw) {
+  if (!raw) return '';
+
+  raw = String(raw).trim();
+
+  // Accept the whole service-account JSON if it was pasted accidentally.
+  if (raw.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed.private_key === 'string') {
+        raw = parsed.private_key;
+      }
+    } catch (e) {}
+  }
+
+  // Accept a JSON-quoted PEM string.
+  if (raw.startsWith('"') && raw.endsWith('"')) {
+    try {
+      raw = JSON.parse(raw);
+    } catch (e) {
+      raw = raw.slice(1, -1);
+    }
+  }
+
+  raw = String(raw)
+    .replace(/\\r\\n/g, '\n')
+    .replace(/\\n/g, '\n')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
+    .trim();
+
+  // Keep PEM markers isolated even if whitespace was flattened.
+  raw = raw
+    .replace(/-----BEGIN PRIVATE KEY-----\s*/g, '-----BEGIN PRIVATE KEY-----\n')
+    .replace(/\s*-----END PRIVATE KEY-----/g, '\n-----END PRIVATE KEY-----');
+
+  return `${raw.trim()}\n`;
+}
+
 const config = {
   // Google Sheets credentials
   googleSheets: {
     spreadsheetId: process.env.GOOGLE_SHEETS_SPREADSHEET_ID,
     serviceAccountEmail: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    // The private key stored in Vercel has literal "\n" strings.
-    // We replace them with real newline characters so the JWT library can parse it.
-    // Without this, Google auth fails with "Invalid PEM formatted message".
-    privateKey: process.env.GOOGLE_PRIVATE_KEY
-      ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')
-      : '',
+    privateKey: parsePrivateKey(process.env.GOOGLE_PRIVATE_KEY),
   },
 
   // Sheet tab name where registrations are stored
@@ -36,4 +70,4 @@ function validateConfig() {
   return missing;
 }
 
-module.exports = { config, validateConfig };
+module.exports = { config, validateConfig, parsePrivateKey };
