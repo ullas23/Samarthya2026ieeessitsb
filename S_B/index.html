@@ -1949,12 +1949,32 @@
             color: rgba(200, 168, 75, 0.2);
         }
 
+        .modal-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 0.25rem;
+        }
+
         .modal-norse {
             font-family: 'Cinzel Decorative', serif;
             font-size: clamp(1.3rem, 3vw, 1.8rem);
             color: var(--gold);
             text-shadow: 0 0 20px var(--gold-glow);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0;
+        }
+
+        .modal-amount {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--gold);
+            background: rgba(200, 168, 75, 0.1);
+            padding: 0.3rem 0.8rem;
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(200, 168, 75, 0.2);
+            white-space: nowrap;
         }
 
         .modal-common {
@@ -2611,7 +2631,7 @@
             <div class="arena-group" id="arena-folkvangr"></div>
 
             <div class="events-register-wrap">
-                <a href="Rules/Samarthya26_Rulebook.pdf" download class="btn-rune btn-rune-primary">Download
+                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf" class="btn-rune btn-rune-primary">Download
                     Rulebook</a>
             </div>
         </div>
@@ -2777,7 +2797,10 @@
             <div class="modal-rune-ring" id="modal-rune">ᚠ</div>
             <button class="modal-close" id="modal-close">✕</button>
             <div id="modal-img-wrap"></div>
-            <div class="modal-norse" id="modal-norse">Event Name</div>
+            <div class="modal-header-row">
+                <div class="modal-norse" id="modal-norse">Event Name</div>
+                <div class="modal-amount" id="modal-amount">Rs.0</div>
+            </div>
             <div class="modal-common" id="modal-common">[ Common Name ]</div>
             <p class="modal-desc" id="modal-desc">Event description placeholder.</p>
             <div class="modal-actions" id="modal-actions"></div>
@@ -2849,9 +2872,20 @@
                     <input type="text" id="reg-college" required placeholder="SSIT / Other">
                 </div>
                 <div class="form-group">
-                    <label>Location / Team Details</label>
-                    <textarea id="reg-location" rows="2"
-                        placeholder="Location, or Team Member Names & USNs (if required)"></textarea>
+                    <label>City</label>
+                    <input type="text" id="reg-city" required placeholder="Your City">
+                </div>
+
+                <div id="team-members-section" style="display: none; margin-bottom: 1rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(200, 168, 75, 0.3); padding-bottom: 0.5rem;">
+                        <label
+                            style="color: var(--gold); font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; margin: 0;">Team
+                            Members</label>
+                        <button type="button" id="add-member-btn" class="btn-rune btn-rune-outline"
+                            style="padding: 0.3rem 0.6rem; font-size: 0.7rem;">+ Add Member</button>
+                    </div>
+                    <div id="team-members-container"></div>
                 </div>
 
                 <div class="qr-display">
@@ -2881,22 +2915,23 @@
         // =============================================
         const events = [
             // === DAY 1: AWAKENING ===
-            { id: 'valhalla', norse: 'Valhalla', common: 'E-Games', rune: 'ᚠ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/valhalla.png', hasRulebook: true, hasRegistration: true, desc: 'Enter the digital colosseum. Compete in the ultimate gaming trials and prove your mastery in the electronic arena. Warriors of the virtual realm, your legend awaits.' },
-            { id: 'helheim', norse: 'Helheim', common: 'Escape Room', rune: 'ᚢ', arena: 'awakening', dateLabel: '22 April', minMembers: 3, maxMembers: 3, isOfflineOnly: false, imagePath: 'Assets/helheim.png', hasRulebook: true, hasRegistration: true, desc: 'Venture into the shadowed realm. Solve cryptic puzzles, decode ancient mysteries, and escape the labyrinth before time runs out. Only the cleverest minds shall find the light.' },
-            { id: 'saga', norse: 'Saga', common: 'Quiz', rune: 'ᚦ', arena: 'awakening', dateLabel: '22 April', minMembers: 2, maxMembers: 2, isOfflineOnly: false, imagePath: 'Assets/saga.png', hasRulebook: true, hasRegistration: true, desc: 'Channel the wisdom of the ages. Test your knowledge across technology, science, and engineering in this epic battle of intellect and quick thinking.' },
-            { id: 'eitri', norse: 'Eitri', common: 'Project Expo', rune: 'ᛇ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 3, isOfflineOnly: false, imagePath: 'Assets/eitri.png', hasRulebook: true, hasRegistration: true, desc: 'Present the fruits of your forge. Showcase your technical projects, innovations, and research to judges and peers in this celebration of engineering achievement.' },
-            { id: 'seidr', norse: 'Seidr', common: 'Reverse Engineering', rune: 'ᚱ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, imagePath: 'Assets/seidr.png', hasRulebook: true, hasRegistration: true, desc: 'Unravel the ancient code. Dissect, analyze, and reconstruct — working backwards from the known to reveal the unknown. A trial of deep technical mastery.' },
-            { id: 'runes', norse: 'Runes', common: 'Spell Bee', rune: 'ᚹ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/runes.png', hasRulebook: true, hasRegistration: true, desc: 'Command the power of language itself. Spell your way to victory through technical jargon, scientific terminology, and the arcane vocabulary of modern engineering.' },
-            { id: 'runecraft', norse: 'Runecraft', common: 'Coding', rune: 'ᚷ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/runecraft.png', hasRulebook: true, hasRegistration: true, desc: 'Forge solutions from pure logic. Write elegant, efficient code to conquer algorithmic challenges and emerge as the supreme craftsman of the digital realm.' },
-            { id: 'bifrost', norse: 'Bifrost', common: 'Treasure Hunt', rune: 'ᚲ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/bifrost.png', hasRulebook: true, hasRegistration: true, desc: 'Follow the rainbow bridge across the campus. Decode clues, unravel mysteries, and navigate the hidden pathways of SSIT in this epic multi-stage adventure.' },
+            { id: 'valhalla', norse: 'Valhalla', common: 'E-Games', rune: 'ᚠ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, amount: 400, imagePath: 'Assets/valhalla.png', hasRulebook: true, hasRegistration: true, desc: 'Enter the digital colosseum. Compete in the ultimate gaming trials and prove your mastery in the electronic arena. Warriors of the virtual realm, your legend awaits.' },
+            { id: 'helheim', norse: 'Helheim', common: 'Escape Room', rune: 'ᚢ', arena: 'awakening', dateLabel: '22 April', minMembers: 3, maxMembers: 3, isOfflineOnly: false, amount: 300, imagePath: 'Assets/helheim.png', hasRulebook: true, hasRegistration: true, desc: 'Venture into the shadowed realm. Solve cryptic puzzles, decode ancient mysteries, and escape the labyrinth before time runs out. Only the cleverest minds shall find the light.' },
+            { id: 'saga', norse: 'Saga', common: 'Quiz', rune: 'ᚦ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 100, imagePath: 'Assets/saga.png', hasRulebook: true, hasRegistration: true, desc: 'Channel the wisdom of the ages. Test your knowledge across technology, science, and engineering in this epic battle of intellect and quick thinking.' },
+            { id: 'eitri', norse: 'Eitri', common: 'Project Expo', rune: 'ᛇ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 3, isOfflineOnly: false, amount: 300, imagePath: 'Assets/eitri.png', hasRulebook: true, hasRegistration: true, desc: 'Present the fruits of your forge. Showcase your technical projects, innovations, and research to judges and peers in this celebration of engineering achievement.' },
+            { id: 'seidr', norse: 'Seidr', common: 'Reverse Engineering', rune: 'ᚱ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, amount: 200, imagePath: 'Assets/seidr.png', hasRulebook: true, hasRegistration: true, desc: 'Unravel the ancient code. Dissect, analyze, and reconstruct — working backwards from the known to reveal the unknown. A trial of deep technical mastery.' },
+            { id: 'runes', norse: 'Runes', common: 'Spell Bee', rune: 'ᚹ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 50, imagePath: 'Assets/runes.png', hasRulebook: true, hasRegistration: true, desc: 'Command the power of language itself. Spell your way to victory through technical jargon, scientific terminology, and the arcane vocabulary of modern engineering.' },
+            { id: 'runecraft', norse: 'Runecraft', common: 'Coding', rune: 'ᚷ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 50, imagePath: 'Assets/runecraft.png', hasRulebook: true, hasRegistration: true, desc: 'Forge solutions from pure logic. Write elegant, efficient code to conquer algorithmic challenges and emerge as the supreme craftsman of the digital realm.' },
+            { id: 'bifrost', norse: 'Bifrost', common: 'Treasure Hunt', rune: 'ᚲ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, amount: 600, imagePath: 'Assets/bifrost.png', hasRulebook: true, hasRegistration: true, desc: 'Follow the rainbow bridge across the campus. Decode clues, unravel mysteries, and navigate the hidden pathways of SSIT in this epic multi-stage adventure.' },
             // === DAY 2: RAGNAROK ===
-            { id: 'volva', norse: 'Volva', common: 'Kaggle Competition', rune: 'ᚨ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/volva.png', hasRulebook: true, hasRegistration: true, desc: 'Wield the magic of data. Craft predictive models, analyze hidden patterns, and divine insights from the vast sea of information in this data science championship.' },
-            { id: 'yggdrasil', norse: 'Yggdrasil', common: 'Web Design', rune: 'ᚺ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/yggdrasil.png', hasRulebook: true, hasRegistration: true, desc: 'Build the digital world tree. Design stunning, functional websites that branch across the web, connecting realms of creativity and technical precision.' },
-            { id: 'mimir', norse: 'Mimir', common: 'Shark Tank', rune: 'ᚾ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/mimir.png', hasRulebook: true, hasRegistration: true, desc: 'Pitch your innovation to the council of wisdom. Present your startup idea, defend your vision, and convince the judges that your concept deserves to be forged into reality.' },
-            { id: 'jotunn', norse: 'Jotunn', common: 'Robo War', rune: 'ᛁ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/jotunn.png', hasRulebook: true, hasRegistration: true, desc: 'Unleash your mechanical giant. Engineer battle robots and send them into the arena for the ultimate test of design, durability, and tactical warfare.' },
-            { id: 'sleipnir', norse: 'Sleipnir', common: 'Robo Race / LFR', rune: 'ᛃ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/sleipnir.png', hasRulebook: true, hasRegistration: true, desc: 'Build the eight-legged steed of innovation. Design line-following robots that race with precision and speed through the course. Engineering speed meets perfection.' },
-            { id: 'loki', norse: 'Loki', common: 'Crime Investigation', rune: 'ᛈ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/loki.png', hasRulebook: true, hasRegistration: true, desc: 'The trickster has struck — can you unveil the truth? Analyze evidence, question suspects, and piece together clues in this thrilling mystery-solving challenge.' },
-            { id: 'skald', norse: 'Skald', common: 'Cinematography', rune: 'ᛉ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/skald.png', hasRulebook: true, hasRegistration: true, desc: 'Tell the tale through moving images. Craft compelling short films and visual narratives that capture the spirit of innovation, technology, and human creativity.' },
+            { id: 'volva', norse: 'Volva', common: 'Kaggle Competition', rune: 'ᚨ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, amount: 200, imagePath: 'Assets/volva.png', hasRulebook: true, hasRegistration: true, desc: 'Wield the magic of data. Craft predictive models, analyze hidden patterns, and divine insights from the vast sea of information in this data science championship.' },
+            { id: 'yggdrasil', norse: 'Yggdrasil', common: 'Web Design', rune: 'ᚺ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 200, imagePath: 'Assets/yggdrasil.png', hasRulebook: true, hasRegistration: true, desc: 'Build the digital world tree. Design stunning, functional websites that branch across the web, connecting realms of creativity and technical precision.' },
+            { id: 'mimir', norse: 'Mimir', common: 'Shark Tank', rune: 'ᚾ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 4, isOfflineOnly: false, amount: 600, imagePath: 'Assets/mimir.png', hasRulebook: true, hasRegistration: true, desc: 'Pitch your innovation to the council of wisdom. Present your startup idea, defend your vision, and convince the judges that your concept deserves to be forged into reality.' },
+            { id: 'jotunn', norse: 'Jotunn', common: 'Robo War', rune: 'ᛁ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 500, imagePath: 'Assets/jotunn.png', hasRulebook: true, hasRegistration: true, desc: 'Unleash your mechanical giant. Engineer battle robots and send them into the arena for the ultimate test of design, durability, and tactical warfare.' },
+            { id: 'vegvisir', norse: 'Vegvisir', common: 'LFR', rune: 'ᛏ', arena: 'ragnarok', dateLabel: '23 April (1:00pm - 3:00pm)', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 500, imagePath: 'Assets/vegvisir.png', hasRulebook: true, hasRegistration: true, desc: 'Navigate the intricate paths of the compass. Build and program a Line Following Robot (LFR) to autonomously trace its path to victory with precision and speed.' },
+            { id: 'sleipnir', norse: 'Sleipnir', common: 'Robo Race', rune: 'ᛃ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 500, imagePath: 'Assets/sleipnir.png', hasRulebook: true, hasRegistration: true, desc: 'Build the eight-legged steed of innovation. Design agile and robust robots that race manually through a treacherous obstacle course. Engineering speed meets control.' },
+            { id: 'loki', norse: 'Loki', common: 'Crime Investigation', rune: 'ᛈ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 2, maxMembers: 4, isOfflineOnly: false, amount: 400, imagePath: 'Assets/loki.png', hasRulebook: true, hasRegistration: true, desc: 'The trickster has struck — can you unveil the truth? Analyze evidence, question suspects, and piece together clues in this thrilling mystery-solving challenge.' },
+            { id: 'skald', norse: 'Skald', common: 'Cinematography', rune: 'ᛉ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, amount: 200, imagePath: 'Assets/skald.png', hasRulebook: true, hasRegistration: true, desc: 'Tell the tale through moving images. Craft compelling short films and visual narratives that capture the spirit of innovation, technology, and human creativity.' },
             // === BOTH DAYS: FOLKVANGR ===
             { id: 'folkvangr', norse: 'Folkvangr', common: 'Fun Games', rune: 'ᛊ', arena: 'folkvangr', dateLabel: '22 & 23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: true, imagePath: 'Assets/folkvangr.png', hasRulebook: false, hasRegistration: false, desc: 'Enter the field of the people — where joy and camaraderie reign. Games include: Arm Wrestling, Musical Chairs, Tug of War, Sack Race, and many more. Offline registrations on spot.' }
         ];
@@ -3114,6 +3149,13 @@
         function openModal(ev) {
             currentModalEvent = ev;
             document.getElementById('modal-norse').textContent = ev.norse;
+            const amountEl = document.getElementById('modal-amount');
+            if (ev.amount) {
+                amountEl.textContent = 'Rs.' + ev.amount;
+                amountEl.style.display = 'block';
+            } else {
+                amountEl.style.display = 'none';
+            }
             document.getElementById('modal-common').textContent = '[ ' + ev.common + ' ]';
             document.getElementById('modal-desc').textContent = ev.desc;
             document.getElementById('modal-rune').textContent = ev.rune;
@@ -3155,12 +3197,69 @@
         // NOTE: Replace this URL with your deployed web app URL after giving the script to Google Apps Scripts!
         const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwsTxwccDKtNwsH6ZXITFMYcAcXrLsbcUiNvqEDUR74vNpAMWl5f36hBJhvI1-7KKw/exec';
 
+        let currentEventMaxMembers = 1;
+        let currentMembersCount = 0;
+
+        const STRICT_TEAM_EVENTS = {
+            'helheim': 3, // Escape Room
+            'valhalla': 4, // E Games
+            'bifrost': 4   // Treasure Hunt
+        };
+
+        function addTeamMemberBlock(isRemovable = true) {
+            currentMembersCount++;
+            const container = document.getElementById('team-members-container');
+            const memberDiv = document.createElement('div');
+            memberDiv.className = 'team-member-block';
+            memberDiv.style.marginBottom = '1rem';
+            memberDiv.style.padding = '1rem';
+            memberDiv.style.background = 'rgba(2, 4, 8, 0.5)';
+            memberDiv.style.border = '1px dashed rgba(200, 168, 75, 0.3)';
+            memberDiv.style.position = 'relative';
+
+            const removeBtn = isRemovable ? `<button type="button" onclick="this.parentElement.remove(); currentMembersCount--;" style="position:absolute; right:12px; top:12px; background:none; border:none; color:#ff4444; cursor:pointer; font-size: 1.2rem; transition: 0.3s; opacity: 0.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">✕</button>` : '';
+
+            memberDiv.innerHTML = `
+                ${removeBtn}
+                <div style="color: var(--gold); font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; margin-bottom: 0.8rem; opacity: 0.6; letter-spacing: 0.1em; text-transform: uppercase;">— Participant ${currentMembersCount + 1} —</div>
+                <div class="form-group"><label>Member Name</label><input type="text" class="tm-name" required placeholder="Name"></div>
+                <div class="form-group"><label>Member Email</label><input type="email" class="tm-email" required placeholder="Email"></div>
+                <div class="form-group"><label>Member USN</label><input type="text" class="tm-usn" required placeholder="USN"></div>
+                <div class="form-group"><label>Member College</label><input type="text" class="tm-college" required placeholder="College"></div>
+            `;
+            container.appendChild(memberDiv);
+        }
+
         function openRegForm(eventId) {
             const ev = events.find(e => e.id === eventId);
+            currentEventMaxMembers = ev.maxMembers || 1;
+            currentMembersCount = 0;
+
             document.getElementById('reg-form-title').innerText = `Register for ${ev.norse}`;
             document.getElementById('reg-event-id').value = ev.id;
             document.getElementById('reg-event-name').value = ev.norse;
             document.getElementById('registration-form').reset();
+
+            const teamSection = document.getElementById('team-members-section');
+            const teamContainer = document.getElementById('team-members-container');
+            const addMemberBtn = document.getElementById('add-member-btn');
+
+            if (teamContainer) teamContainer.innerHTML = '';
+
+            if (STRICT_TEAM_EVENTS[eventId]) {
+                const totalRequired = STRICT_TEAM_EVENTS[eventId];
+                const membersToAdd = totalRequired - 1;
+                for (let i = 0; i < membersToAdd; i++) {
+                    addTeamMemberBlock(false);
+                }
+                if (teamSection) teamSection.style.display = 'block';
+                if (addMemberBtn) addMemberBtn.style.display = 'none';
+            } else if (currentEventMaxMembers > 1) {
+                if (teamSection) teamSection.style.display = 'block';
+                if (addMemberBtn) addMemberBtn.style.display = 'inline-block';
+            } else {
+                if (teamSection) teamSection.style.display = 'none';
+            }
 
             // Close main event modal
             document.getElementById('modal-overlay').classList.remove('active');
@@ -3168,6 +3267,17 @@
             // Open Reg Form
             document.getElementById('reg-form-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+
+        const addMemberButton = document.getElementById('add-member-btn');
+        if (addMemberButton) {
+            addMemberButton.addEventListener('click', () => {
+                if (currentMembersCount >= currentEventMaxMembers - 1) {
+                    alert(`Maximum team size is ${currentEventMaxMembers} (including Team Lead).`);
+                    return;
+                }
+                addTeamMemberBlock(true);
+            });
         }
 
         function closeRegForm() {
@@ -3197,6 +3307,21 @@
             reader.onload = async function (eReader) {
                 const base64Data = eReader.target.result.split(',')[1];
 
+                const tmNames = document.querySelectorAll('.tm-name');
+                const tmEmails = document.querySelectorAll('.tm-email');
+                const tmUsns = document.querySelectorAll('.tm-usn');
+                const tmColleges = document.querySelectorAll('.tm-college');
+
+                const teamMembers = [];
+                for (let i = 0; i < tmNames.length; i++) {
+                    teamMembers.push({
+                        name: tmNames[i].value,
+                        email: tmEmails[i].value,
+                        usn: tmUsns[i].value,
+                        college: tmColleges[i].value
+                    });
+                }
+
                 const formData = {
                     eventName: document.getElementById('reg-event-name').value,
                     eventId: document.getElementById('reg-event-id').value,
@@ -3205,11 +3330,12 @@
                     email: document.getElementById('reg-email').value,
                     usn: document.getElementById('reg-usn').value,
                     college: document.getElementById('reg-college').value,
-                    location: document.getElementById('reg-location').value,
+                    city: document.getElementById('reg-city').value,
                     utr: document.getElementById('reg-utr').value,
                     screenshotName: file.name,
                     screenshotMime: file.type,
-                    paymentScreenshotData: base64Data
+                    paymentScreenshotData: base64Data,
+                    teamMembers: teamMembers
                 };
 
                 try {
