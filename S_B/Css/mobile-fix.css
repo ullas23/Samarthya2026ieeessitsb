@@ -167,6 +167,13 @@ html {
         padding-right: 1rem;
     }
 
+    #welcome-norse::before {
+        background-image: url('../Assets/yggdrasil_mobile.png');
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+    }
+
     .welcome-container {
         max-width: 100%;
         overflow: hidden;
