@@ -2330,8 +2330,8 @@
         }
 
         .reg-box.caution-box {
-            background: linear-gradient(135deg, rgba(80, 20, 20, 0.95), rgba(20, 5, 5, 0.98));
-            border: 2px solid #ff4444;
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(5, 13, 26, 0.98));
+            border: 2px solid var(--gold);
             max-width: 400px;
             text-align: center;
         }
@@ -2799,8 +2799,10 @@
             <img src="Rules/placeholder.png" alt="Event Rulebook" class="rulebook-img" id="rulebook-img"
                 onerror="this.style.display='none'; document.getElementById('rulebook-fallback').style.display='block';">
             <div id="rulebook-fallback" style="display: none; text-align: center; padding: 3rem;">
-                <p style="color: rgba(232, 244, 248, 0.5); font-family: 'Rajdhani', sans-serif; margin-bottom: 1.5rem;">The specific poster for this event couldn't load.</p>
-                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf" class="btn-rune btn-rune-outline" style="text-decoration: none; display: inline-block;">Download Rulebook</a>
+                <p style="color: rgba(232, 244, 248, 0.5); font-family: 'Rajdhani', sans-serif; margin-bottom: 1.5rem;">
+                    The specific poster for this event couldn't load.</p>
+                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf" class="btn-rune btn-rune-outline"
+                    style="text-decoration: none; display: inline-block;">Download Rulebook</a>
             </div>
         </div>
     </div>
@@ -2808,10 +2810,11 @@
     <!-- CAUTION PARALLEL EVENT MODAL -->
     <div class="caution-modal" id="caution-modal">
         <div class="reg-box caution-box">
-            <h3 class="reg-title" style="color: #ff4444;">Caution!</h3>
-            <p class="caution-text" id="caution-text">This event runs parallel with another event.</p>
+            <h3 class="reg-title" style="color: var(--gold);">Caution!</h3>
+            <p class="caution-text" id="caution-text" style="color: var(--frost);">This event runs parallel with another
+                event.</p>
             <div class="modal-actions">
-                <button class="btn-rune btn-rune-outline" style="border-color: #ff4444; color: #ff4444;"
+                <button class="btn-rune btn-rune-outline" style="border-color: var(--cyan); color: var(--cyan);"
                     onclick="document.getElementById('caution-modal').classList.remove('active')">Cancel</button>
                 <button class="btn-rune btn-rune-primary" id="caution-proceed-btn">Proceed</button>
             </div>
@@ -2892,9 +2895,13 @@
                 </div>
 
                 <div class="amount-display-container" style="text-align: center; margin: 1.5rem 0 1rem;">
-                    <div class="amount-box" style="display: inline-block; border: 1px dashed rgba(200, 168, 75, 0.5); padding: 0.8rem 2.5rem; border-radius: 8px; background: linear-gradient(135deg, rgba(20,25,35,0.8), rgba(10,15,25,0.9)); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-                        <span style="font-family: 'Share Tech Mono', monospace; color: rgba(232, 244, 248, 0.6); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 0.4rem;">Registration Fee</span>
-                        <span id="reg-amount-display" style="font-family: 'Cinzel Decorative', serif; color: var(--gold); font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 15px rgba(200,168,75,0.3);">₹0</span>
+                    <div class="amount-box"
+                        style="display: inline-block; border: 1px dashed rgba(200, 168, 75, 0.5); padding: 0.8rem 2.5rem; border-radius: 8px; background: linear-gradient(135deg, rgba(20,25,35,0.8), rgba(10,15,25,0.9)); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                        <span
+                            style="font-family: 'Share Tech Mono', monospace; color: rgba(232, 244, 248, 0.6); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 0.4rem;">Registration
+                            Fee</span>
+                        <span id="reg-amount-display"
+                            style="font-family: 'Cinzel Decorative', serif; color: var(--gold); font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 15px rgba(200,168,75,0.3);">₹0</span>
                     </div>
                 </div>
 
@@ -3117,10 +3124,16 @@
                 const others = group.filter(id => id !== eventId);
                 if (others.length > 0) {
                     const currentEvent = events.find(e => e.id === eventId);
-                    const otherNames = others.map(id => events.find(e => e.id === id).norse).join(' and ');
+                    const otherNames = others.map(id => {
+                        const ev = events.find(e => e.id === id);
+                        return `${ev.norse} (${ev.common})`;
+                    }).join(' & ');
 
                     document.getElementById('caution-text').innerText =
-                        `Caution! This event (${currentEvent.norse}) runs parallel with ${otherNames}. If you register for this event, ${otherNames} will be locked.`;
+                        `This event, ${currentEvent.norse} (${currentEvent.common}), runs parallel with ${otherNames}.
+                        If you register for ${currentEvent.norse} (${currentEvent.common}), the ${otherNames} will be safely locked.
+                        
+                        Proceed to register for ${currentEvent.norse} (${currentEvent.common})?`;
 
                     const proceedBtn = document.getElementById('caution-proceed-btn');
                     proceedBtn.onclick = () => {
@@ -3235,7 +3248,7 @@
             document.getElementById('reg-event-id').value = ev.id;
             document.getElementById('reg-event-name').value = ev.norse;
             document.getElementById('registration-form').reset();
-            
+
             // Set Dynamic Amount Display
             document.getElementById('reg-amount-display').innerText = '₹' + (ev.amount || 0);
 
