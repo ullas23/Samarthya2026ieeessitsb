@@ -12,6 +12,24 @@ function doPost(e) {
       college, city, utr, paymentScreenshotData, screenshotName, screenshotMime, teamMembers, gameChoice
     } = data;
 
+    // Check if UTR already exists
+    const doc = SpreadsheetApp.openById(SHEET_ID);
+    let sheet = doc.getSheetByName(SHEET_NAME);
+    if (sheet) {
+      const lastRow = sheet.getLastRow();
+      if (lastRow > 1) {
+        const utrValues = sheet.getRange(2, 11, lastRow - 1).getValues(); // Column 11 is UTR
+        const existingUtrs = utrValues.map(row => (row[0] || "").toString().trim().toUpperCase());
+        const incomingUtr = (utr || "").toString().trim().toUpperCase();
+        if (incomingUtr && existingUtrs.includes(incomingUtr)) {
+          return ContentService.createTextOutput(JSON.stringify({
+            status: 'error',
+            message: 'registration unsuccessful : utr already exists'
+          })).setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+    }
+
     // Generate Registration ID
     const regId = 'SAM26-' + eventName.substring(0, 3).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
 
@@ -43,8 +61,6 @@ function doPost(e) {
     }
 
     // 2. Append to Spreadsheet
-    const doc = SpreadsheetApp.openById(SHEET_ID);
-    let sheet = doc.getSheetByName(SHEET_NAME);
     if (!sheet) {
       sheet = doc.insertSheet(SHEET_NAME);
       sheet.appendRow([
@@ -53,22 +69,6 @@ function doPost(e) {
         'Member 3 Name', 'Member 3 Email', 'Member 3 USN', 'Member 3 College',
         'Member 4 Name', 'Member 4 Email', 'Member 4 USN', 'Member 4 College'
       ]);
-    }
-
-    // Check for duplicate UTR
-    const dataRange = sheet.getDataRange();
-    const values = dataRange.getValues();
-    const utrColumnIndex = 10; // Column 11 (UTR) is index 10
-
-    if (values.length > 1) {
-      for (let i = 1; i < values.length; i++) {
-        if (values[i][utrColumnIndex] && values[i][utrColumnIndex].toString().trim() === utr.toString().trim()) {
-          return ContentService.createTextOutput(JSON.stringify({
-            status: 'error',
-            message: 'registration unsucsessful : utr already exists'
-          })).setMimeType(ContentService.MimeType.JSON);
-        }
-      }
     }
 
     sheet.appendRow([

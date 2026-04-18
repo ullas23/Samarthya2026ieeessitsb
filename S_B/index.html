@@ -184,24 +184,20 @@
         .nav-register::before {
             content: '';
             position: absolute;
-            inset: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            background: var(--gold) !important;
+            inset: 0;
+            background: var(--gold);
             transform: scaleX(0);
-            transform-origin: left !important;
-            transition: transform 0.3s !important;
-            z-index: -1 !important;
+            transform-origin: left;
+            transition: transform 0.3s;
+            z-index: -1;
         }
 
         .nav-register:hover {
-            color: var(--midnight) !important;
+            color: var(--midnight);
         }
 
         .nav-register:hover::before {
-            transform: scaleX(1) !important;
-            left: 0 !important;
+            transform: scaleX(1);
         }
 
         .hamburger {
@@ -1154,15 +1150,16 @@
 
         .rulebook-manuscript {
             position: relative;
-            max-width: 800px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
+            max-width: 1000px;
+            width: 95%;
+            height: 90vh;
             background: linear-gradient(180deg, rgba(15, 20, 35, 0.98), rgba(8, 14, 28, 0.99));
             border: 2px solid rgba(200, 168, 75, 0.3);
             box-shadow: 0 0 60px rgba(200, 168, 75, 0.08), 0 0 120px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.3);
-            padding: clamp(1.5rem, 4vw, 3rem);
+            padding: clamp(1rem, 3vw, 2rem);
             clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            display: flex;
+            flex-direction: column;
         }
 
         .rulebook-title {
@@ -1174,13 +1171,12 @@
             margin-bottom: 1.5rem;
         }
 
-        .rulebook-img {
+        .rulebook-viewer {
             width: 100%;
-            max-height: 60vh;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-            border: 1px solid rgba(200, 168, 75, 0.1);
+            flex: 1;
+            border: 1px solid rgba(200, 168, 75, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
         }
 
         .rulebook-back {
@@ -2485,9 +2481,9 @@
             <li><a href="#about">About</a></li>
             <li><a href="#societies">Societies</a></li>
             <li><a href="#events">Events</a></li>
+            <li><a href="#hall-of-sagas">Gallery</a></li>
             <li><a href="#reach-realm">Location</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><a href="#hall-of-sagas">Gallery</a></li>
             <li class="nav-link-mobile-only" style="display:none;"><a href="#events" class="btn-rune btn-rune-primary"
                     style="display:inline-block;text-decoration:none;padding:0.8rem 2rem;">Register for Samarthya</a>
             </li>
@@ -2796,11 +2792,11 @@
         <div class="rulebook-manuscript">
             <button class="rulebook-back" id="rulebook-back">← Back</button>
             <div class="rulebook-title" id="rulebook-title">Rulebook</div>
-            <img src="Rules/placeholder.png" alt="Event Rulebook" class="rulebook-img" id="rulebook-img"
-                onerror="this.style.display='none'; document.getElementById('rulebook-fallback').style.display='block';">
-            <div id="rulebook-fallback" style="display: none; text-align: center; padding: 3rem;">
-                <p style="color: rgba(232, 244, 248, 0.5); font-family: 'Rajdhani', sans-serif; margin-bottom: 1.5rem;">The specific poster for this event couldn't load.</p>
-                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf" class="btn-rune btn-rune-outline" style="text-decoration: none; display: inline-block;">Download Rulebook</a>
+            <iframe id="rulebook-viewer" class="rulebook-viewer" src=""></iframe>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="Rules/SAM-26-Rulebook.pdf" target="_blank" class="btn-rune btn-rune-outline"
+                    style="font-size: 0.75rem; padding: 0.6rem 1.5rem; display: inline-block; text-decoration: none;">Open
+                    in New Tab</a>
             </div>
         </div>
     </div>
@@ -3163,7 +3159,7 @@
                     btns += `<button class="btn-rune btn-rune-primary" onclick="handleRegisterClick('${ev.id}')">Register</button>`;
                 }
                 if (ev.hasRulebook) {
-                    btns += `<button class="btn-rune btn-rune-outline" onclick="openRulebook('${ev.norse}', '${ev.id}')">Rulebook</button>`;
+                    btns += `<button class="btn-rune btn-rune-outline" onclick="openRulebook('${ev.norse}')">Rulebook</button>`;
                 }
                 actions.innerHTML = btns;
             }
@@ -3404,7 +3400,7 @@
                         alert('Registration completed successfully! Welcome to the Arena.');
                         closeRegForm();
                     } else {
-                        alert(result.message);
+                        alert('Error: ' + result.message);
                     }
                 } catch (error) {
                     alert('Network error during registration. Please try again.');
@@ -3418,11 +3414,11 @@
         });
 
         // Rulebook panel
-        function openRulebook(norseName, eventId) {
+        function openRulebook(norseName) {
             document.getElementById('rulebook-title').textContent = norseName + ' — Rulebook';
-            document.getElementById('rulebook-fallback').style.display = 'none';
-            document.getElementById('rulebook-img').style.display = 'block';
-            document.getElementById('rulebook-img').src = 'Rules/' + eventId + '.png';
+            const viewer = document.getElementById('rulebook-viewer');
+            // Set the PDF source
+            viewer.src = 'Rules/SAM-26-Rulebook.pdf';
             document.getElementById('rulebook-panel').classList.add('active');
         }
 
