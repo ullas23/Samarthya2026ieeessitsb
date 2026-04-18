@@ -55,6 +55,22 @@ function doPost(e) {
       ]);
     }
 
+    // Check for duplicate UTR
+    const dataRange = sheet.getDataRange();
+    const values = dataRange.getValues();
+    const utrColumnIndex = 10; // Column 11 (UTR) is index 10
+
+    if (values.length > 1) {
+      for (let i = 1; i < values.length; i++) {
+        if (values[i][utrColumnIndex] && values[i][utrColumnIndex].toString().trim() === utr.toString().trim()) {
+          return ContentService.createTextOutput(JSON.stringify({
+            status: 'error',
+            message: 'registration unsucsessful : utr already exists'
+          })).setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+    }
+
     sheet.appendRow([
       new Date(),
       regId,

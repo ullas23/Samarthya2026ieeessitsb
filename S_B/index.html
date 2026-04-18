@@ -3400,7 +3400,7 @@
                         alert('Registration completed successfully! Welcome to the Arena.');
                         closeRegForm();
                     } else {
-                        alert('Error: ' + result.message);
+                        alert(result.message);
                     }
                 } catch (error) {
                     alert('Network error during registration. Please try again.');
