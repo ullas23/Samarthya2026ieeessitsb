@@ -2631,7 +2631,8 @@
             <div class="arena-group" id="arena-folkvangr"></div>
 
             <div class="events-register-wrap">
-                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf" class="btn-rune btn-rune-primary">Download
+                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf"
+                    class="btn-rune btn-rune-primary">Download
                     Rulebook</a>
             </div>
         </div>
@@ -2815,7 +2816,8 @@
             <iframe id="rulebook-viewer" class="rulebook-viewer" src=""></iframe>
             <div style="text-align: center; margin-top: 1rem;">
                 <a href="Rules/SAM-26-Rulebook.pdf" target="_blank" class="btn-rune btn-rune-outline"
-                    style="font-size: 0.75rem; padding: 0.6rem 1.5rem; display: inline-block; text-decoration: none;">Open in New Tab</a>
+                    style="font-size: 0.75rem; padding: 0.6rem 1.5rem; display: inline-block; text-decoration: none;">Open
+                    in New Tab</a>
             </div>
         </div>
     </div>
@@ -2879,6 +2881,16 @@
                     <input type="text" id="reg-city" required placeholder="Your City">
                 </div>
 
+                <!-- E-GAMES OPTION -->
+                <div class="form-group" id="egame-choice-section" style="display: none;">
+                    <label>Choose Your Battleground</label>
+                    <select id="reg-game-choice"
+                        style="background: rgba(2, 4, 8, 0.8); border: 1px solid rgba(200, 168, 75, 0.3); color: #fff; padding: 0.8rem; font-family: 'Rajdhani', sans-serif; cursor: pointer; border-radius: 4px;">
+                        <option value="Free Fire">Free Fire</option>
+                        <option value="BGMI">BGMI</option>
+                    </select>
+                </div>
+
                 <div id="team-members-section" style="display: none; margin-bottom: 1rem;">
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(200, 168, 75, 0.3); padding-bottom: 0.5rem;">
@@ -2918,7 +2930,7 @@
         // =============================================
         const events = [
             // === DAY 1: AWAKENING ===
-            { id: 'valhalla', norse: 'Valhalla', common: 'E-Games', rune: 'ᚠ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, amount: 400, imagePath: 'Assets/valhalla.png', hasRulebook: true, hasRegistration: true, desc: 'Enter the digital colosseum. Compete in the ultimate gaming trials and prove your mastery in the electronic arena. Warriors of the virtual realm, your legend awaits.' },
+            { id: 'valhalla', norse: 'Valhalla', common: 'E-Games', rune: 'ᚠ', arena: 'awakening', dateLabel: '22 April', minMembers: 2, maxMembers: 4, isOfflineOnly: false, amount: 400, imagePath: 'Assets/valhalla.png', hasRulebook: true, hasRegistration: true, desc: 'Enter the digital colosseum. Compete in the ultimate gaming trials and prove your mastery in the electronic arena. Warriors of the virtual realm, your legend awaits.' },
             { id: 'helheim', norse: 'Helheim', common: 'Escape Room', rune: 'ᚢ', arena: 'awakening', dateLabel: '22 April', minMembers: 3, maxMembers: 3, isOfflineOnly: false, amount: 300, imagePath: 'Assets/helheim.png', hasRulebook: true, hasRegistration: true, desc: 'Venture into the shadowed realm. Solve cryptic puzzles, decode ancient mysteries, and escape the labyrinth before time runs out. Only the cleverest minds shall find the light.' },
             { id: 'saga', norse: 'Saga', common: 'Quiz', rune: 'ᚦ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 100, imagePath: 'Assets/saga.png', hasRulebook: true, hasRegistration: true, desc: 'Channel the wisdom of the ages. Test your knowledge across technology, science, and engineering in this epic battle of intellect and quick thinking.' },
             { id: 'eitri', norse: 'Eitri', common: 'Project Expo', rune: 'ᛇ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 3, isOfflineOnly: false, amount: 300, imagePath: 'Assets/eitri.png', hasRulebook: true, hasRegistration: true, desc: 'Present the fruits of your forge. Showcase your technical projects, innovations, and research to judges and peers in this celebration of engineering achievement.' },
@@ -3198,7 +3210,7 @@
         // REGISTRATION FORM LOGIC
         // =============================================
         // NOTE: Replace this URL with your deployed web app URL after giving the script to Google Apps Scripts!
-        const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwsTxwccDKtNwsH6ZXITFMYcAcXrLsbcUiNvqEDUR74vNpAMWl5f36hBJhvI1-7KKw/exec';
+        const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTj4p1eF2M4I5eYw0iOCMLDw8Y8WLwN9MwWgr2MNkc0Kmf6ByUo3tSkbPrQ_wPaPY5/exec';
 
         let currentEventMaxMembers = 1;
         let currentMembersCount = 0;
@@ -3262,6 +3274,14 @@
                 if (addMemberBtn) addMemberBtn.style.display = 'inline-block';
             } else {
                 if (teamSection) teamSection.style.display = 'none';
+            }
+
+            // Show/Hide E-Games options
+            const egameSection = document.getElementById('egame-choice-section');
+            if (eventId === 'valhalla') {
+                egameSection.style.display = 'block';
+            } else {
+                egameSection.style.display = 'none';
             }
 
             // Close main event modal
@@ -3334,6 +3354,7 @@
                     usn: document.getElementById('reg-usn').value,
                     college: document.getElementById('reg-college').value,
                     city: document.getElementById('reg-city').value,
+                    gameChoice: document.getElementById('reg-event-id').value === 'valhalla' ? document.getElementById('reg-game-choice').value : 'N/A',
                     utr: document.getElementById('reg-utr').value,
                     screenshotName: file.name,
                     screenshotMime: file.type,
