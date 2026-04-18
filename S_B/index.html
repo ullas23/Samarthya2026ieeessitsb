@@ -184,20 +184,24 @@
         .nav-register::before {
             content: '';
             position: absolute;
-            inset: 0;
-            background: var(--gold);
+            inset: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: var(--gold) !important;
             transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s;
-            z-index: -1;
+            transform-origin: left !important;
+            transition: transform 0.3s !important;
+            z-index: -1 !important;
         }
 
         .nav-register:hover {
-            color: var(--midnight);
+            color: var(--midnight) !important;
         }
 
         .nav-register:hover::before {
-            transform: scaleX(1);
+            transform: scaleX(1) !important;
+            left: 0 !important;
         }
 
         .hamburger {
@@ -1150,16 +1154,15 @@
 
         .rulebook-manuscript {
             position: relative;
-            max-width: 1000px;
-            width: 95%;
-            height: 90vh;
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
             background: linear-gradient(180deg, rgba(15, 20, 35, 0.98), rgba(8, 14, 28, 0.99));
             border: 2px solid rgba(200, 168, 75, 0.3);
             box-shadow: 0 0 60px rgba(200, 168, 75, 0.08), 0 0 120px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.3);
-            padding: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1.5rem, 4vw, 3rem);
             clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-            display: flex;
-            flex-direction: column;
         }
 
         .rulebook-title {
@@ -1171,12 +1174,13 @@
             margin-bottom: 1.5rem;
         }
 
-        .rulebook-viewer {
+        .rulebook-img {
             width: 100%;
-            flex: 1;
-            border: 1px solid rgba(200, 168, 75, 0.15);
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
+            max-height: 60vh;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid rgba(200, 168, 75, 0.1);
         }
 
         .rulebook-back {
@@ -2326,8 +2330,8 @@
         }
 
         .reg-box.caution-box {
-            background: linear-gradient(135deg, rgba(80, 20, 20, 0.95), rgba(20, 5, 5, 0.98));
-            border: 2px solid #ff4444;
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(5, 13, 26, 0.98));
+            border: 2px solid var(--gold);
             max-width: 400px;
             text-align: center;
         }
@@ -2481,9 +2485,9 @@
             <li><a href="#about">About</a></li>
             <li><a href="#societies">Societies</a></li>
             <li><a href="#events">Events</a></li>
-            <li><a href="#hall-of-sagas">Gallery</a></li>
             <li><a href="#reach-realm">Location</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><a href="#hall-of-sagas">Gallery</a></li>
             <li class="nav-link-mobile-only" style="display:none;"><a href="#events" class="btn-rune btn-rune-primary"
                     style="display:inline-block;text-decoration:none;padding:0.8rem 2rem;">Register for Samarthya</a>
             </li>
@@ -2792,11 +2796,13 @@
         <div class="rulebook-manuscript">
             <button class="rulebook-back" id="rulebook-back">← Back</button>
             <div class="rulebook-title" id="rulebook-title">Rulebook</div>
-            <iframe id="rulebook-viewer" class="rulebook-viewer" src=""></iframe>
-            <div style="text-align: center; margin-top: 1rem;">
-                <a href="Rules/SAM-26-Rulebook.pdf" target="_blank" class="btn-rune btn-rune-outline"
-                    style="font-size: 0.75rem; padding: 0.6rem 1.5rem; display: inline-block; text-decoration: none;">Open
-                    in New Tab</a>
+            <img src="Rules/placeholder.png" alt="Event Rulebook" class="rulebook-img" id="rulebook-img"
+                onerror="this.style.display='none'; document.getElementById('rulebook-fallback').style.display='block';">
+            <div id="rulebook-fallback" style="display: none; text-align: center; padding: 3rem;">
+                <p style="color: rgba(232, 244, 248, 0.5); font-family: 'Rajdhani', sans-serif; margin-bottom: 1.5rem;">
+                    The specific poster for this event couldn't load.</p>
+                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf" class="btn-rune btn-rune-outline"
+                    style="text-decoration: none; display: inline-block;">Download Rulebook</a>
             </div>
         </div>
     </div>
@@ -2804,10 +2810,11 @@
     <!-- CAUTION PARALLEL EVENT MODAL -->
     <div class="caution-modal" id="caution-modal">
         <div class="reg-box caution-box">
-            <h3 class="reg-title" style="color: #ff4444;">Caution!</h3>
-            <p class="caution-text" id="caution-text">This event runs parallel with another event.</p>
+            <h3 class="reg-title" style="color: var(--gold);">Caution!</h3>
+            <p class="caution-text" id="caution-text" style="color: var(--frost);">This event runs parallel with another
+                event.</p>
             <div class="modal-actions">
-                <button class="btn-rune btn-rune-outline" style="border-color: #ff4444; color: #ff4444;"
+                <button class="btn-rune btn-rune-outline" style="border-color: var(--cyan); color: var(--cyan);"
                     onclick="document.getElementById('caution-modal').classList.remove('active')">Cancel</button>
                 <button class="btn-rune btn-rune-primary" id="caution-proceed-btn">Proceed</button>
             </div>
@@ -2837,11 +2844,14 @@
 
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" id="reg-name" required placeholder="Your Full Name">
+                    <input type="text" id="reg-name" required placeholder="Your Full Name" pattern="^[a-zA-Z\s]+$"
+                        title="Name should only contain letters and spaces">
                 </div>
                 <div class="form-group">
                     <label>Phone Number</label>
-                    <input type="text" id="reg-phone" required placeholder="e.g. 9876543210">
+                    <input type="text" id="reg-phone" required placeholder="10-digit Number (not starting with 0)"
+                        maxlength="10" pattern="^[1-9][0-9]{9}$"
+                        title="Phone number must be 10 digits and cannot start with 0">
                 </div>
                 <div class="form-group">
                     <label>Email</label>
@@ -2853,11 +2863,13 @@
                 </div>
                 <div class="form-group">
                     <label>College Name</label>
-                    <input type="text" id="reg-college" required placeholder="SSIT / Other">
+                    <input type="text" id="reg-college" required placeholder="SSIT / Other" maxlength="75"
+                        style="text-transform: uppercase;">
                 </div>
                 <div class="form-group">
                     <label>City</label>
-                    <input type="text" id="reg-city" required placeholder="Your City">
+                    <input type="text" id="reg-city" required placeholder="Your City" maxlength="75"
+                        style="text-transform: uppercase;">
                 </div>
 
                 <!-- E-GAMES OPTION -->
@@ -2882,13 +2894,25 @@
                     <div id="team-members-container"></div>
                 </div>
 
+                <div class="amount-display-container" style="text-align: center; margin: 1.5rem 0 1rem;">
+                    <div class="amount-box"
+                        style="display: inline-block; border: 1px dashed rgba(200, 168, 75, 0.5); padding: 0.8rem 2.5rem; border-radius: 8px; background: linear-gradient(135deg, rgba(20,25,35,0.8), rgba(10,15,25,0.9)); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                        <span
+                            style="font-family: 'Share Tech Mono', monospace; color: rgba(232, 244, 248, 0.6); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 0.4rem;">Registration
+                            Fee</span>
+                        <span id="reg-amount-display"
+                            style="font-family: 'Cinzel Decorative', serif; color: var(--gold); font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 15px rgba(200,168,75,0.3);">₹0</span>
+                    </div>
+                </div>
+
                 <div class="qr-display">
                     <img src="Assets/QR.png" alt="Payment QR">
                 </div>
 
                 <div class="form-group">
                     <label>UTR Number</label>
-                    <input type="text" id="reg-utr" required placeholder="12-digit UTR">
+                    <input type="text" id="reg-utr" required placeholder="12-digit UTR" maxlength="12"
+                        pattern="^[0-9]{12}$" title="UTR must be exactly 12 digits">
                 </div>
                 <div class="form-group">
                     <label>Payment Screenshot <span class="file-upload-lbl">(Max 25MB)</span></label>
@@ -3100,10 +3124,16 @@
                 const others = group.filter(id => id !== eventId);
                 if (others.length > 0) {
                     const currentEvent = events.find(e => e.id === eventId);
-                    const otherNames = others.map(id => events.find(e => e.id === id).norse).join(' and ');
+                    const otherNames = others.map(id => {
+                        const ev = events.find(e => e.id === id);
+                        return `${ev.norse} (${ev.common})`;
+                    }).join(' & ');
 
                     document.getElementById('caution-text').innerText =
-                        `Caution! This event (${currentEvent.norse}) runs parallel with ${otherNames}. If you register for this event, ${otherNames} will be locked.`;
+                        `This event, ${currentEvent.norse} (${currentEvent.common}), runs parallel with ${otherNames}.
+                        If you register for ${currentEvent.norse} (${currentEvent.common}), the ${otherNames} will be safely locked.
+                        
+                        Proceed to register for ${currentEvent.norse} (${currentEvent.common})?`;
 
                     const proceedBtn = document.getElementById('caution-proceed-btn');
                     proceedBtn.onclick = () => {
@@ -3154,7 +3184,7 @@
                     btns += `<button class="btn-rune btn-rune-primary" onclick="handleRegisterClick('${ev.id}')">Register</button>`;
                 }
                 if (ev.hasRulebook) {
-                    btns += `<button class="btn-rune btn-rune-outline" onclick="openRulebook('${ev.norse}')">Rulebook</button>`;
+                    btns += `<button class="btn-rune btn-rune-outline" onclick="openRulebook('${ev.norse}', '${ev.id}')">Rulebook</button>`;
                 }
                 actions.innerHTML = btns;
             }
@@ -3181,7 +3211,6 @@
 
         const STRICT_TEAM_EVENTS = {
             'helheim': 3, // Escape Room
-            'valhalla': 4, // E Games
             'bifrost': 4   // Treasure Hunt
         };
 
@@ -3196,28 +3225,42 @@
             memberDiv.style.border = '1px dashed rgba(200, 168, 75, 0.3)';
             memberDiv.style.position = 'relative';
 
-            const removeBtn = isRemovable ? `<button type="button" onclick="this.parentElement.remove(); currentMembersCount--;" style="position:absolute; right:12px; top:12px; background:none; border:none; color:#ff4444; cursor:pointer; font-size: 1.2rem; transition: 0.3s; opacity: 0.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">✕</button>` : '';
+            const removeBtn = isRemovable ? `<button type="button" onclick="this.parentElement.remove(); currentMembersCount--; const addBtn = document.getElementById('add-member-btn'); if (addBtn) addBtn.style.display = '';" style="position:absolute; right:12px; top:12px; background:none; border:none; color:#ff4444; cursor:pointer; font-size: 1.2rem; transition: 0.3s; opacity: 0.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">✕</button>` : '';
 
             memberDiv.innerHTML = `
                 ${removeBtn}
                 <div style="color: var(--gold); font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; margin-bottom: 0.8rem; opacity: 0.6; letter-spacing: 0.1em; text-transform: uppercase;">— Participant ${currentMembersCount + 1} —</div>
-                <div class="form-group"><label>Member Name</label><input type="text" class="tm-name" required placeholder="Name"></div>
+                <div class="form-group"><label>Member Name</label><input type="text" class="tm-name" required placeholder="Name" pattern="^[a-zA-Z\s]+$" title="Name should only contain letters and spaces"></div>
                 <div class="form-group"><label>Member Email</label><input type="email" class="tm-email" required placeholder="Email"></div>
                 <div class="form-group"><label>Member USN</label><input type="text" class="tm-usn" required placeholder="USN"></div>
-                <div class="form-group"><label>Member College</label><input type="text" class="tm-college" required placeholder="College"></div>
+                <div class="form-group"><label>Member College</label><input type="text" class="tm-college" required placeholder="College" maxlength="75" style="text-transform: uppercase;"></div>
             `;
             container.appendChild(memberDiv);
+            
+            // Check if max members reached and hide/unhide button
+            const addMemberBtn = document.getElementById('add-member-btn');
+            if (addMemberBtn && window.currentEventMaxMembers) {
+                if (currentMembersCount >= window.currentEventMaxMembers - 1) {
+                    addMemberBtn.style.display = 'none';
+                } else {
+                    addMemberBtn.style.display = '';
+                }
+            }
         }
 
         function openRegForm(eventId) {
             const ev = events.find(e => e.id === eventId);
             currentEventMaxMembers = ev.maxMembers || 1;
+            window.currentEventMaxMembers = currentEventMaxMembers;
             currentMembersCount = 0;
 
             document.getElementById('reg-form-title').innerText = `Register for ${ev.norse}`;
             document.getElementById('reg-event-id').value = ev.id;
             document.getElementById('reg-event-name').value = ev.norse;
             document.getElementById('registration-form').reset();
+
+            // Set Dynamic Amount Display
+            document.getElementById('reg-amount-display').innerText = '₹' + (ev.amount || 0);
 
             const teamSection = document.getElementById('team-members-section');
             const teamContainer = document.getElementById('team-members-container');
@@ -3234,8 +3277,20 @@
                 if (teamSection) teamSection.style.display = 'block';
                 if (addMemberBtn) addMemberBtn.style.display = 'none';
             } else if (currentEventMaxMembers > 1) {
+                if (ev.minMembers && ev.minMembers > 1) {
+                    const requiredToAdd = ev.minMembers - 1;
+                    for (let i = 0; i < requiredToAdd; i++) {
+                        addTeamMemberBlock(false);
+                    }
+                }
                 if (teamSection) teamSection.style.display = 'block';
-                if (addMemberBtn) addMemberBtn.style.display = 'inline-block';
+                if (addMemberBtn) {
+                   if (currentMembersCount >= currentEventMaxMembers - 1) {
+                       addMemberBtn.style.display = 'none';
+                   } else {
+                       addMemberBtn.style.display = '';
+                   }
+                }
             } else {
                 if (teamSection) teamSection.style.display = 'none';
             }
@@ -3271,6 +3326,50 @@
             document.getElementById('reg-form-modal').classList.remove('active');
             document.body.style.overflow = '';
         }
+
+        // AUTO UPPERCASE & VALIDATION LISTENERS
+        function setupValidation() {
+            const upperFields = ['reg-college', 'reg-city'];
+            upperFields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', function () {
+                        this.value = this.value.toUpperCase();
+                    });
+                }
+            });
+
+            // Delegate for team member college fields
+            document.getElementById('team-members-container').addEventListener('input', e => {
+                if (e.target.classList.contains('tm-college')) {
+                    e.target.value = e.target.value.toUpperCase();
+                }
+            });
+
+            // Prevent numbers in Name fields
+            document.addEventListener('input', e => {
+                const target = e.target;
+
+                // Name validation
+                if (target.id === 'reg-name' || target.classList.contains('tm-name')) {
+                    target.value = target.value.replace(/[^a-zA-Z\s]/g, '');
+                }
+
+                // Phone validation (numeric only, no leading zero, max 10)
+                if (target.id === 'reg-phone') {
+                    target.value = target.value.replace(/\D/g, ''); // Numeric only
+                    if (target.value.startsWith('0')) {
+                        target.value = target.value.substring(1); // Remove leading zero
+                    }
+                }
+
+                // UTR validation (numeric only, max 12)
+                if (target.id === 'reg-utr') {
+                    target.value = target.value.replace(/\D/g, ''); // Numeric only
+                }
+            });
+        }
+        setupValidation();
 
         document.getElementById('registration-form').addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -3365,11 +3464,11 @@
         });
 
         // Rulebook panel
-        function openRulebook(norseName) {
+        function openRulebook(norseName, eventId) {
             document.getElementById('rulebook-title').textContent = norseName + ' — Rulebook';
-            const viewer = document.getElementById('rulebook-viewer');
-            // Set the PDF source
-            viewer.src = 'Rules/SAM-26-Rulebook.pdf';
+            document.getElementById('rulebook-fallback').style.display = 'none';
+            document.getElementById('rulebook-img').style.display = 'block';
+            document.getElementById('rulebook-img').src = 'Rules/' + eventId + '.png?v=' + new Date().getTime();
             document.getElementById('rulebook-panel').classList.add('active');
         }
 
