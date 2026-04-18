@@ -2485,9 +2485,9 @@
             <li><a href="#about">About</a></li>
             <li><a href="#societies">Societies</a></li>
             <li><a href="#events">Events</a></li>
-            <li><a href="#hall-of-sagas">Gallery</a></li>
             <li><a href="#reach-realm">Location</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><a href="#hall-of-sagas">Gallery</a></li>
             <li class="nav-link-mobile-only" style="display:none;"><a href="#events" class="btn-rune btn-rune-primary"
                     style="display:inline-block;text-decoration:none;padding:0.8rem 2rem;">Register for Samarthya</a>
             </li>
@@ -2797,7 +2797,11 @@
             <button class="rulebook-back" id="rulebook-back">← Back</button>
             <div class="rulebook-title" id="rulebook-title">Rulebook</div>
             <img src="Rules/placeholder.png" alt="Event Rulebook" class="rulebook-img" id="rulebook-img"
-                onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<p style=\'text-align:center;color:rgba(232,244,248,0.5);padding:3rem;font-family:Rajdhani,sans-serif;\'>Rulebook coming soon...</p>');">
+                onerror="this.style.display='none'; document.getElementById('rulebook-fallback').style.display='block';">
+            <div id="rulebook-fallback" style="display: none; text-align: center; padding: 3rem;">
+                <p style="color: rgba(232, 244, 248, 0.5); font-family: 'Rajdhani', sans-serif; margin-bottom: 1.5rem;">The specific poster for this event couldn't load.</p>
+                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf" class="btn-rune btn-rune-outline" style="text-decoration: none; display: inline-block;">Download Rulebook</a>
+            </div>
         </div>
     </div>
 
@@ -3416,8 +3420,9 @@
         // Rulebook panel
         function openRulebook(norseName, eventId) {
             document.getElementById('rulebook-title').textContent = norseName + ' — Rulebook';
-            document.getElementById('rulebook-img').src = 'Rules/' + eventId + '.png';
+            document.getElementById('rulebook-fallback').style.display = 'none';
             document.getElementById('rulebook-img').style.display = 'block';
+            document.getElementById('rulebook-img').src = 'Rules/' + eventId + '.png';
             document.getElementById('rulebook-panel').classList.add('active');
         }
 
