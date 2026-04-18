@@ -3225,7 +3225,7 @@
             memberDiv.style.border = '1px dashed rgba(200, 168, 75, 0.3)';
             memberDiv.style.position = 'relative';
 
-            const removeBtn = isRemovable ? `<button type="button" onclick="this.parentElement.remove(); currentMembersCount--;" style="position:absolute; right:12px; top:12px; background:none; border:none; color:#ff4444; cursor:pointer; font-size: 1.2rem; transition: 0.3s; opacity: 0.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">✕</button>` : '';
+            const removeBtn = isRemovable ? `<button type="button" onclick="this.parentElement.remove(); currentMembersCount--; const addBtn = document.getElementById('add-member-btn'); if (addBtn) addBtn.style.display = '';" style="position:absolute; right:12px; top:12px; background:none; border:none; color:#ff4444; cursor:pointer; font-size: 1.2rem; transition: 0.3s; opacity: 0.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">✕</button>` : '';
 
             memberDiv.innerHTML = `
                 ${removeBtn}
@@ -3236,11 +3236,22 @@
                 <div class="form-group"><label>Member College</label><input type="text" class="tm-college" required placeholder="College" maxlength="75" style="text-transform: uppercase;"></div>
             `;
             container.appendChild(memberDiv);
+            
+            // Check if max members reached and hide/unhide button
+            const addMemberBtn = document.getElementById('add-member-btn');
+            if (addMemberBtn && window.currentEventMaxMembers) {
+                if (currentMembersCount >= window.currentEventMaxMembers - 1) {
+                    addMemberBtn.style.display = 'none';
+                } else {
+                    addMemberBtn.style.display = '';
+                }
+            }
         }
 
         function openRegForm(eventId) {
             const ev = events.find(e => e.id === eventId);
             currentEventMaxMembers = ev.maxMembers || 1;
+            window.currentEventMaxMembers = currentEventMaxMembers;
             currentMembersCount = 0;
 
             document.getElementById('reg-form-title').innerText = `Register for ${ev.norse}`;
@@ -3273,7 +3284,13 @@
                     }
                 }
                 if (teamSection) teamSection.style.display = 'block';
-                if (addMemberBtn) addMemberBtn.style.display = 'inline-block';
+                if (addMemberBtn) {
+                   if (currentMembersCount >= currentEventMaxMembers - 1) {
+                       addMemberBtn.style.display = 'none';
+                   } else {
+                       addMemberBtn.style.display = '';
+                   }
+                }
             } else {
                 if (teamSection) teamSection.style.display = 'none';
             }
