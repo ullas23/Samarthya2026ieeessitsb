@@ -594,7 +594,7 @@
         }
 
         .welcome-text {
-            font-size: clamp(1.3rem, 2.5vw, 1.4rem);
+            font-size: clamp(1rem, 2vw, 1.25rem);
             line-height: 1.8;
             color: rgba(232, 244, 248, 0.75);
             margin-bottom: 2rem;
@@ -1102,12 +1102,14 @@
 
         /* MODAL IMAGE */
         .modal-illustration {
-            width: 100%;
+            width: 80%;
             height: clamp(140px, 25vw, 220px);
             object-fit: cover;
             border: 1px solid rgba(200, 168, 75, 0.15);
             margin-bottom: 1.5rem;
             display: block;
+            margin-left: auto;
+            margin-right: auto;
             filter: brightness(0.9) contrast(1.05);
         }
 
@@ -1148,15 +1150,16 @@
 
         .rulebook-manuscript {
             position: relative;
-            max-width: 800px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
+            max-width: 1000px;
+            width: 95%;
+            height: 90vh;
             background: linear-gradient(180deg, rgba(15, 20, 35, 0.98), rgba(8, 14, 28, 0.99));
             border: 2px solid rgba(200, 168, 75, 0.3);
             box-shadow: 0 0 60px rgba(200, 168, 75, 0.08), 0 0 120px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.3);
-            padding: clamp(1.5rem, 4vw, 3rem);
+            padding: clamp(1rem, 3vw, 2rem);
             clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            display: flex;
+            flex-direction: column;
         }
 
         .rulebook-title {
@@ -1168,13 +1171,12 @@
             margin-bottom: 1.5rem;
         }
 
-        .rulebook-img {
+        .rulebook-viewer {
             width: 100%;
-            max-height: 60vh;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-            border: 1px solid rgba(200, 168, 75, 0.1);
+            flex: 1;
+            border: 1px solid rgba(200, 168, 75, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
         }
 
         .rulebook-back {
@@ -1336,7 +1338,7 @@
             font-size: 1.8rem;
             color: #ffffff;
             text-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan);
-            box-shadow: inset 0 15px 10px -10px rgba(200, 168, 75, 0.4), 0 10px 15px rgba(0,0,0,0.9);
+            box-shadow: inset 0 15px 10px -10px rgba(200, 168, 75, 0.4), 0 10px 15px rgba(0, 0, 0, 0.9);
             position: relative;
             z-index: 4;
             line-height: 1;
@@ -1916,24 +1918,6 @@
             transform: scale(1);
         }
 
-        .modal-rune-ring {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(60px, 10vw, 80px);
-            height: clamp(60px, 10vw, 80px);
-            border: 2px solid var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--midnight);
-            font-family: 'Cinzel Decorative', serif;
-            font-size: clamp(1.2rem, 2vw, 1.5rem);
-            color: var(--gold);
-            box-shadow: 0 0 30px var(--gold-glow);
-        }
 
         .modal-img {
             width: 100%;
@@ -1949,12 +1933,32 @@
             color: rgba(200, 168, 75, 0.2);
         }
 
+        .modal-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 0.25rem;
+        }
+
         .modal-norse {
             font-family: 'Cinzel Decorative', serif;
             font-size: clamp(1.3rem, 3vw, 1.8rem);
             color: var(--gold);
             text-shadow: 0 0 20px var(--gold-glow);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0;
+        }
+
+        .modal-amount {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--gold);
+            background: rgba(200, 168, 75, 0.1);
+            padding: 0.3rem 0.8rem;
+            border: 1px solid var(--gold);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(200, 168, 75, 0.2);
+            white-space: nowrap;
         }
 
         .modal-common {
@@ -2249,12 +2253,7 @@
                 margin-bottom: 2rem;
             }
 
-            .modal-rune-ring {
-                width: 56px;
-                height: 56px;
-                top: -28px;
-                font-size: 1rem;
-            }
+
 
 
 
@@ -2289,17 +2288,146 @@
             border-radius: 2px;
         }
 
-        /* ANIMATED GLOW PULSE */
-        @keyframes glowPulse {
+        /* REGISTRATION MODALS */
+        .reg-modal,
+        .caution-modal,
+        .message-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 4, 8, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+            z-index: 10000;
+        }
 
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(200, 168, 75, 0.3);
-            }
+        .reg-modal.active,
+        .caution-modal.active,
+        .message-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
 
-            50% {
-                box-shadow: 0 0 40px rgba(200, 168, 75, 0.6);
-            }
+        .reg-box {
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(5, 13, 26, 0.98));
+            border: 2px solid rgba(200, 168, 75, 0.4);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(200, 168, 75, 0.1);
+            max-width: 500px;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .reg-box.caution-box {
+            background: linear-gradient(135deg, rgba(80, 20, 20, 0.95), rgba(20, 5, 5, 0.98));
+            border: 2px solid #ff4444;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .reg-box.msg-box {
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(5, 13, 26, 0.98));
+            border: 2px solid var(--gold);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .reg-box .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .reg-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold);
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--cyan);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background: rgba(2, 4, 8, 0.8);
+            border: 1px solid rgba(200, 168, 75, 0.3);
+            color: #fff;
+            padding: 0.8rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .qr-display {
+            width: 200px;
+            height: 200px;
+            margin: 1rem auto;
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            /* Placeholder */
+            color: var(--gold);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .qr-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .caution-text {
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .file-upload-lbl {
+            font-size: 0.8rem !important;
+            color: #888 !important;
+        }
+
+        /* Submit loader */
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -2482,7 +2610,8 @@
             <div class="arena-group" id="arena-folkvangr"></div>
 
             <div class="events-register-wrap">
-                <a href="Rules/Samarthya26_Rulebook.pdf" download class="btn-rune btn-rune-primary">Download
+                <a href="Rules/SAM-26-Rulebook.pdf" download="SAM-26-Rulebook.pdf"
+                    class="btn-rune btn-rune-primary">Download
                     Rulebook</a>
             </div>
         </div>
@@ -2645,10 +2774,13 @@
     <!-- EVENT MODAL -->
     <div id="modal-overlay">
         <div class="modal-box">
-            <div class="modal-rune-ring" id="modal-rune">ᚠ</div>
+
             <button class="modal-close" id="modal-close">✕</button>
             <div id="modal-img-wrap"></div>
-            <div class="modal-norse" id="modal-norse">Event Name</div>
+            <div class="modal-header-row">
+                <div class="modal-norse" id="modal-norse">Event Name</div>
+                <div class="modal-amount" id="modal-amount">Rs.0</div>
+            </div>
             <div class="modal-common" id="modal-common">[ Common Name ]</div>
             <p class="modal-desc" id="modal-desc">Event description placeholder.</p>
             <div class="modal-actions" id="modal-actions"></div>
@@ -2660,8 +2792,114 @@
         <div class="rulebook-manuscript">
             <button class="rulebook-back" id="rulebook-back">← Back</button>
             <div class="rulebook-title" id="rulebook-title">Rulebook</div>
-            <img src="Rules/placeholder.png" alt="Event Rulebook" class="rulebook-img" id="rulebook-img"
-                onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<p style=\'text-align:center;color:rgba(232,244,248,0.5);padding:3rem;font-family:Rajdhani,sans-serif;\'>Rulebook coming soon...</p>');">
+            <iframe id="rulebook-viewer" class="rulebook-viewer" src=""></iframe>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="Rules/SAM-26-Rulebook.pdf" target="_blank" class="btn-rune btn-rune-outline"
+                    style="font-size: 0.75rem; padding: 0.6rem 1.5rem; display: inline-block; text-decoration: none;">Open
+                    in New Tab</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAUTION PARALLEL EVENT MODAL -->
+    <div class="caution-modal" id="caution-modal">
+        <div class="reg-box caution-box">
+            <h3 class="reg-title" style="color: #ff4444;">Caution!</h3>
+            <p class="caution-text" id="caution-text">This event runs parallel with another event.</p>
+            <div class="modal-actions">
+                <button class="btn-rune btn-rune-outline" style="border-color: #ff4444; color: #ff4444;"
+                    onclick="document.getElementById('caution-modal').classList.remove('active')">Cancel</button>
+                <button class="btn-rune btn-rune-primary" id="caution-proceed-btn">Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOCK MESSAGE MODAL -->
+    <div class="message-modal" id="message-modal">
+        <div class="reg-box msg-box">
+            <h3 class="reg-title">Event Locked</h3>
+            <p class="caution-text" id="message-text"></p>
+            <div class="modal-actions">
+                <button class="btn-rune btn-rune-primary"
+                    onclick="document.getElementById('message-modal').classList.remove('active')">Got It</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTRATION FORM MODAL -->
+    <div class="reg-modal" id="reg-form-modal">
+        <div class="reg-box">
+            <button class="close-btn" onclick="closeRegForm()">✕</button>
+            <h3 class="reg-title" id="reg-form-title">Register</h3>
+            <form id="registration-form">
+                <input type="hidden" id="reg-event-id" name="eventId">
+                <input type="hidden" id="reg-event-name" name="eventName">
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="reg-name" required placeholder="Your Full Name">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="reg-phone" required placeholder="e.g. 9876543210">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" required placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                    <label>USN</label>
+                    <input type="text" id="reg-usn" required placeholder="e.g. 1SS23CS001">
+                </div>
+                <div class="form-group">
+                    <label>College Name</label>
+                    <input type="text" id="reg-college" required placeholder="SSIT / Other">
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" id="reg-city" required placeholder="Your City">
+                </div>
+
+                <!-- E-GAMES OPTION -->
+                <div class="form-group" id="egame-choice-section" style="display: none;">
+                    <label>Choose Your Battleground</label>
+                    <select id="reg-game-choice"
+                        style="background: rgba(2, 4, 8, 0.8); border: 1px solid rgba(200, 168, 75, 0.3); color: #fff; padding: 0.8rem; font-family: 'Rajdhani', sans-serif; cursor: pointer; border-radius: 4px;">
+                        <option value="Free Fire">Free Fire</option>
+                        <option value="BGMI">BGMI</option>
+                    </select>
+                </div>
+
+                <div id="team-members-section" style="display: none; margin-bottom: 1rem;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(200, 168, 75, 0.3); padding-bottom: 0.5rem;">
+                        <label
+                            style="color: var(--gold); font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; margin: 0;">Team
+                            Members</label>
+                        <button type="button" id="add-member-btn" class="btn-rune btn-rune-outline"
+                            style="padding: 0.3rem 0.6rem; font-size: 0.7rem;">+ Add Member</button>
+                    </div>
+                    <div id="team-members-container"></div>
+                </div>
+
+                <div class="qr-display">
+                    <img src="Assets/QR.png" alt="Payment QR">
+                </div>
+
+                <div class="form-group">
+                    <label>UTR Number</label>
+                    <input type="text" id="reg-utr" required placeholder="12-digit UTR">
+                </div>
+                <div class="form-group">
+                    <label>Payment Screenshot <span class="file-upload-lbl">(Max 25MB)</span></label>
+                    <input type="file" id="reg-screenshot" required accept="image/*">
+                </div>
+
+                <div class="modal-actions" style="margin-top: 2rem;">
+                    <button type="submit" class="btn-rune btn-rune-primary" id="reg-submit-btn"
+                        style="width: 100%;">Submit Registration</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -2671,27 +2909,26 @@
         // =============================================
         const events = [
             // === DAY 1: AWAKENING ===
-            { id: 'valhalla', norse: 'Valhalla', common: 'E-Games', rune: 'ᚠ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/valhalla.png', hasRulebook: true, hasRegistration: true, desc: 'Enter the digital colosseum. Compete in the ultimate gaming trials and prove your mastery in the electronic arena. Warriors of the virtual realm, your legend awaits.' },
-            { id: 'helheim', norse: 'Helheim', common: 'Escape Room', rune: 'ᚢ', arena: 'awakening', dateLabel: '22 April', minMembers: 3, maxMembers: 3, isOfflineOnly: false, imagePath: 'Assets/helheim.png', hasRulebook: true, hasRegistration: true, desc: 'Venture into the shadowed realm. Solve cryptic puzzles, decode ancient mysteries, and escape the labyrinth before time runs out. Only the cleverest minds shall find the light.' },
-            { id: 'saga', norse: 'Saga', common: 'Quiz', rune: 'ᚦ', arena: 'awakening', dateLabel: '22 April', minMembers: 2, maxMembers: 2, isOfflineOnly: false, imagePath: 'Assets/saga.png', hasRulebook: true, hasRegistration: true, desc: 'Channel the wisdom of the ages. Test your knowledge across technology, science, and engineering in this epic battle of intellect and quick thinking.' },
-            { id: 'eitri', norse: 'Eitri', common: 'Project Expo', rune: 'ᛇ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/eitri.png', hasRulebook: true, hasRegistration: true, desc: 'Present the fruits of your forge. Showcase your technical projects, innovations, and research to judges and peers in this celebration of engineering achievement.' },
-            { id: 'seidr', norse: 'Seidr', common: 'Reverse Engineering', rune: 'ᚱ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, imagePath: 'Assets/seidr.png', hasRulebook: true, hasRegistration: true, desc: 'Unravel the ancient code. Dissect, analyze, and reconstruct — working backwards from the known to reveal the unknown. A trial of deep technical mastery.' },
-            { id: 'runes', norse: 'Runes', common: 'Spell Bee', rune: 'ᚹ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/runes.png', hasRulebook: true, hasRegistration: true, desc: 'Command the power of language itself. Spell your way to victory through technical jargon, scientific terminology, and the arcane vocabulary of modern engineering.' },
-            { id: 'runecraft', norse: 'Runecraft', common: 'Coding', rune: 'ᚷ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/runecraft.png', hasRulebook: true, hasRegistration: true, desc: 'Forge solutions from pure logic. Write elegant, efficient code to conquer algorithmic challenges and emerge as the supreme craftsman of the digital realm.' },
-            { id: 'bifrost', norse: 'Bifrost', common: 'Treasure Hunt', rune: 'ᚲ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/bifrost.png', hasRulebook: true, hasRegistration: true, desc: 'Follow the rainbow bridge across the campus. Decode clues, unravel mysteries, and navigate the hidden pathways of SSIT in this epic multi-stage adventure.' },
+            { id: 'valhalla', norse: 'Valhalla', common: 'E-Games', rune: 'ᚠ', arena: 'awakening', dateLabel: '22 April', minMembers: 2, maxMembers: 4, isOfflineOnly: false, amount: 400, imagePath: 'Assets/valhalla.png', hasRulebook: true, hasRegistration: true, desc: 'Enter the digital colosseum. Compete in the ultimate gaming trials and prove your mastery in the electronic arena. Warriors of the virtual realm, your legend awaits.' },
+            { id: 'helheim', norse: 'Helheim', common: 'Escape Room', rune: 'ᚢ', arena: 'awakening', dateLabel: '22 April', minMembers: 3, maxMembers: 3, isOfflineOnly: false, amount: 300, imagePath: 'Assets/helheim.png', hasRulebook: true, hasRegistration: true, desc: 'Venture into the shadowed realm. Solve cryptic puzzles, decode ancient mysteries, and escape the labyrinth before time runs out. Only the cleverest minds shall find the light.' },
+            { id: 'saga', norse: 'Saga', common: 'Quiz', rune: 'ᚦ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 100, imagePath: 'Assets/saga.png', hasRulebook: true, hasRegistration: true, desc: 'Channel the wisdom of the ages. Test your knowledge across technology, science, and engineering in this epic battle of intellect and quick thinking.' },
+            { id: 'eitri', norse: 'Eitri', common: 'Project Expo', rune: 'ᛇ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 3, isOfflineOnly: false, amount: 300, imagePath: 'Assets/eitri.png', hasRulebook: true, hasRegistration: true, desc: 'Present the fruits of your forge. Showcase your technical projects, innovations, and research to judges and peers in this celebration of engineering achievement.' },
+            { id: 'seidr', norse: 'Seidr', common: 'Reverse Engineering', rune: 'ᚱ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, amount: 200, imagePath: 'Assets/seidr.png', hasRulebook: true, hasRegistration: true, desc: 'Unravel the ancient code. Dissect, analyze, and reconstruct — working backwards from the known to reveal the unknown. A trial of deep technical mastery.' },
+            { id: 'runes', norse: 'Runes', common: 'Spell Bee', rune: 'ᚹ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 50, imagePath: 'Assets/runes.png', hasRulebook: true, hasRegistration: true, desc: 'Command the power of language itself. Spell your way to victory through technical jargon, scientific terminology, and the arcane vocabulary of modern engineering.' },
+            { id: 'runecraft', norse: 'Runecraft', common: 'Coding', rune: 'ᚷ', arena: 'awakening', dateLabel: '22 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 50, imagePath: 'Assets/runecraft.png', hasRulebook: true, hasRegistration: true, desc: 'Forge solutions from pure logic. Write elegant, efficient code to conquer algorithmic challenges and emerge as the supreme craftsman of the digital realm.' },
+            { id: 'bifrost', norse: 'Bifrost', common: 'Treasure Hunt', rune: 'ᚲ', arena: 'awakening', dateLabel: '22 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, amount: 600, imagePath: 'Assets/bifrost.png', hasRulebook: true, hasRegistration: true, desc: 'Follow the rainbow bridge across the campus. Decode clues, unravel mysteries, and navigate the hidden pathways of SSIT in this epic multi-stage adventure.' },
             // === DAY 2: RAGNAROK ===
-            { id: 'volva', norse: 'Volva', common: 'Kaggle Competition', rune: 'ᚨ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/volva.png', hasRulebook: true, hasRegistration: true, desc: 'Wield the magic of data. Craft predictive models, analyze hidden patterns, and divine insights from the vast sea of information in this data science championship.' },
-            { id: 'yggdrasil', norse: 'Yggdrasil', common: 'Web Design', rune: 'ᚺ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/yggdrasil.png', hasRulebook: true, hasRegistration: true, desc: 'Build the digital world tree. Design stunning, functional websites that branch across the web, connecting realms of creativity and technical precision.' },
-            { id: 'mimir', norse: 'Mimir', common: 'Shark Tank', rune: 'ᚾ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/mimir.png', hasRulebook: true, hasRegistration: true, desc: 'Pitch your innovation to the council of wisdom. Present your startup idea, defend your vision, and convince the judges that your concept deserves to be forged into reality.' },
-            { id: 'jotunn', norse: 'Jotunn', common: 'Robo War', rune: 'ᛁ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/jotunn.png', hasRulebook: true, hasRegistration: true, desc: 'Unleash your mechanical giant. Engineer battle robots and send them into the arena for the ultimate test of design, durability, and tactical warfare.' },
-            { id: 'sleipnir', norse: 'Sleipnir', common: 'Robo Race / LFR', rune: 'ᛃ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/sleipnir.png', hasRulebook: true, hasRegistration: true, desc: 'Build the eight-legged steed of innovation. Design line-following robots that race with precision and speed through the course. Engineering speed meets perfection.' },
-            { id: 'loki', norse: 'Loki', common: 'Crime Investigation', rune: 'ᛈ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 4, maxMembers: 4, isOfflineOnly: false, imagePath: 'Assets/loki.png', hasRulebook: true, hasRegistration: true, desc: 'The trickster has struck — can you unveil the truth? Analyze evidence, question suspects, and piece together clues in this thrilling mystery-solving challenge.' },
-            { id: 'skald', norse: 'Skald', common: 'Cinematography', rune: 'ᛉ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, imagePath: 'Assets/skald.png', hasRulebook: true, hasRegistration: true, desc: 'Tell the tale through moving images. Craft compelling short films and visual narratives that capture the spirit of innovation, technology, and human creativity.' },
+            { id: 'volva', norse: 'Volva', common: 'Kaggle Competition', rune: 'ᚨ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, amount: 200, imagePath: 'Assets/volva.png', hasRulebook: true, hasRegistration: true, desc: 'Wield the magic of data. Craft predictive models, analyze hidden patterns, and divine insights from the vast sea of information in this data science championship.' },
+            { id: 'yggdrasil', norse: 'Yggdrasil', common: 'Web Design', rune: 'ᚺ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 200, imagePath: 'Assets/yggdrasil.png', hasRulebook: true, hasRegistration: true, desc: 'Build the digital world tree. Design stunning, functional websites that branch across the web, connecting realms of creativity and technical precision.' },
+            { id: 'mimir', norse: 'Mimir', common: 'Shark Tank', rune: 'ᚾ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 4, isOfflineOnly: false, amount: 600, imagePath: 'Assets/mimir.png', hasRulebook: true, hasRegistration: true, desc: 'Pitch your innovation to the council of wisdom. Present your startup idea, defend your vision, and convince the judges that your concept deserves to be forged into reality.' },
+            { id: 'jotunn', norse: 'Jotunn', common: 'Robo War', rune: 'ᛁ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 500, imagePath: 'Assets/jotunn.png', hasRulebook: true, hasRegistration: true, desc: 'Unleash your mechanical giant. Engineer battle robots and send them into the arena for the ultimate test of design, durability, and tactical warfare.' },
+            { id: 'vegvisir', norse: 'Vegvisir', common: 'LFR', rune: 'ᛏ', arena: 'ragnarok', dateLabel: '23 April (1:00pm - 3:00pm)', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 500, imagePath: 'Assets/vegvisir.png', hasRulebook: true, hasRegistration: true, desc: 'Navigate the intricate paths of the compass. Build and program a Line Following Robot (LFR) to autonomously trace its path to victory with precision and speed.' },
+            { id: 'sleipnir', norse: 'Sleipnir', common: 'Robo Race', rune: 'ᛃ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: false, amount: 500, imagePath: 'Assets/sleipnir.png', hasRulebook: true, hasRegistration: true, desc: 'Build the eight-legged steed of innovation. Design agile and robust robots that race manually through a treacherous obstacle course. Engineering speed meets control.' },
+            { id: 'loki', norse: 'Loki', common: 'Crime Investigation', rune: 'ᛈ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 2, maxMembers: 4, isOfflineOnly: false, amount: 400, imagePath: 'Assets/loki.png', hasRulebook: true, hasRegistration: true, desc: 'The trickster has struck — can you unveil the truth? Analyze evidence, question suspects, and piece together clues in this thrilling mystery-solving challenge.' },
+            { id: 'skald', norse: 'Skald', common: 'Cinematography', rune: 'ᛉ', arena: 'ragnarok', dateLabel: '23 April', minMembers: 1, maxMembers: 2, isOfflineOnly: false, amount: 200, imagePath: 'Assets/skald.png', hasRulebook: true, hasRegistration: true, desc: 'Tell the tale through moving images. Craft compelling short films and visual narratives that capture the spirit of innovation, technology, and human creativity.' },
             // === BOTH DAYS: FOLKVANGR ===
             { id: 'folkvangr', norse: 'Folkvangr', common: 'Fun Games', rune: 'ᛊ', arena: 'folkvangr', dateLabel: '22 & 23 April', minMembers: 1, maxMembers: 1, isOfflineOnly: true, imagePath: 'Assets/folkvangr.png', hasRulebook: false, hasRegistration: false, desc: 'Enter the field of the people — where joy and camaraderie reign. Games include: Arm Wrestling, Musical Chairs, Tug of War, Sack Race, and many more. Offline registrations on spot.' }
         ];
-
-        window._samEvents = events;
 
         // =============================================
         // LOGO / SOCIETIES DATA
@@ -2779,23 +3016,8 @@
                 return;
             }
 
-            if (arenaKey === 'ragnarok') {
-                // First 4 in a 4-col grid, last 3 centered
-                const topGrid = document.createElement('div');
-                topGrid.className = 'arena-grid';
-                const bottomRow = document.createElement('div');
-                bottomRow.className = 'arena-grid-center-row';
 
-                arenaEvents.forEach((ev, i) => {
-                    const card = createEventCard(ev, i);
-                    if (i < 4) topGrid.appendChild(card);
-                    else bottomRow.appendChild(card);
-                });
 
-                container.appendChild(topGrid);
-                container.appendChild(bottomRow);
-                return;
-            }
 
             // Default: 4-col grid (Awakening)
             const grid = document.createElement('div');
@@ -2827,6 +3049,78 @@
         buildArena('arena-folkvangr', 'folkvangr', 'Folkvangr', '22 & 23 April • Special Trial', 'ᛊ');
 
         // =============================================
+        // PARALLEL EVENT GROUPS (Lock Mechanism)
+        // =============================================
+        const parallelGroups = [
+            ['valhalla', 'runecraft'],          // Day 1 T1 (9am-11am)
+            ['eitri', 'seidr', 'runes'],        // Day 1 T2 (12:20-2pm)
+            ['volva', 'yggdrasil'],             // Day 2 T1 (9am-11am)
+            ['jotunn', 'sleipnir'],             // Day 2 T2 (1pm-3pm)
+            ['loki', 'skald']                   // Day 2 T3 (3pm-4:30pm)
+        ];
+
+        // Exceptions implicitly handled by not being in any group: helheim, saga, bifrost, mimir
+
+        function getRegisteredEvents() {
+            return JSON.parse(localStorage.getItem('samarthya26_registered') || '[]');
+        }
+
+        function markRegistered(eventId) {
+            let regs = getRegisteredEvents();
+            if (!regs.includes(eventId)) {
+                regs.push(eventId);
+                localStorage.setItem('samarthya26_registered', JSON.stringify(regs));
+            }
+        }
+
+        function handleRegisterClick(eventId) {
+            const registered = getRegisteredEvents();
+            const group = parallelGroups.find(g => g.includes(eventId));
+
+            // Already registered for this exact event?
+            if (registered.includes(eventId)) {
+                document.getElementById('message-text').innerText = "You have already registered for this event.";
+                document.getElementById('message-modal').classList.add('active');
+                return;
+            }
+
+            if (group) {
+                const conflicting = group.find(id => id !== eventId && registered.includes(id));
+                if (conflicting) {
+                    // Lock applied
+                    const confEvent = events.find(e => e.id === conflicting);
+                    const currentEvent = events.find(e => e.id === eventId);
+                    document.getElementById('message-text').innerText =
+                        `Event locked. Running parallel to ${confEvent.norse}, which you have registered for.`;
+                    document.getElementById('message-modal').classList.add('active');
+                    return;
+                }
+
+                // Check if any other events in the group exist to warn
+                const others = group.filter(id => id !== eventId);
+                if (others.length > 0) {
+                    const currentEvent = events.find(e => e.id === eventId);
+                    const otherNames = others.map(id => events.find(e => e.id === id).norse).join(' and ');
+
+                    document.getElementById('caution-text').innerText =
+                        `Caution! This event (${currentEvent.norse}) runs parallel with ${otherNames}. If you register for this event, ${otherNames} will be locked.`;
+
+                    const proceedBtn = document.getElementById('caution-proceed-btn');
+                    proceedBtn.onclick = () => {
+                        document.getElementById('caution-modal').classList.remove('active');
+                        openRegForm(eventId);
+                    };
+
+                    document.getElementById('caution-modal').classList.add('active');
+                    return;
+                }
+            }
+
+            // No conflicts, directly proceed
+            openRegForm(eventId);
+        }
+
+        // =============================================
         // MODAL (reworked with illustration + Register + Rulebook)
         // =============================================
         let currentModalEvent = null;
@@ -2834,9 +3128,16 @@
         function openModal(ev) {
             currentModalEvent = ev;
             document.getElementById('modal-norse').textContent = ev.norse;
+            const amountEl = document.getElementById('modal-amount');
+            if (ev.amount) {
+                amountEl.textContent = 'Rs.' + ev.amount;
+                amountEl.style.display = 'block';
+            } else {
+                amountEl.style.display = 'none';
+            }
             document.getElementById('modal-common').textContent = '[ ' + ev.common + ' ]';
             document.getElementById('modal-desc').textContent = ev.desc;
-            document.getElementById('modal-rune').textContent = ev.rune;
+
 
             // Illustration image
             const imgWrap = document.getElementById('modal-img-wrap');
@@ -2850,7 +3151,7 @@
             } else {
                 let btns = '';
                 if (ev.hasRegistration) {
-                    btns += `<a href="#" class="btn-rune btn-rune-primary" onclick="event.preventDefault(); closeModal(); samHandleRegister('${ev.id}');">Register</a>`;
+                    btns += `<button class="btn-rune btn-rune-primary" onclick="handleRegisterClick('${ev.id}')">Register</button>`;
                 }
                 if (ev.hasRulebook) {
                     btns += `<button class="btn-rune btn-rune-outline" onclick="openRulebook('${ev.norse}')">Rulebook</button>`;
@@ -2869,12 +3170,206 @@
             currentModalEvent = null;
         }
 
+        // =============================================
+        // REGISTRATION FORM LOGIC
+        // =============================================
+        // NOTE: Replace this URL with your deployed web app URL after giving the script to Google Apps Scripts!
+        const GOOGLE_APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTj4p1eF2M4I5eYw0iOCMLDw8Y8WLwN9MwWgr2MNkc0Kmf6ByUo3tSkbPrQ_wPaPY5/exec';
+
+        let currentEventMaxMembers = 1;
+        let currentMembersCount = 0;
+
+        const STRICT_TEAM_EVENTS = {
+            'helheim': 3, // Escape Room
+            'valhalla': 4, // E Games
+            'bifrost': 4   // Treasure Hunt
+        };
+
+        function addTeamMemberBlock(isRemovable = true) {
+            currentMembersCount++;
+            const container = document.getElementById('team-members-container');
+            const memberDiv = document.createElement('div');
+            memberDiv.className = 'team-member-block';
+            memberDiv.style.marginBottom = '1rem';
+            memberDiv.style.padding = '1rem';
+            memberDiv.style.background = 'rgba(2, 4, 8, 0.5)';
+            memberDiv.style.border = '1px dashed rgba(200, 168, 75, 0.3)';
+            memberDiv.style.position = 'relative';
+
+            const removeBtn = isRemovable ? `<button type="button" onclick="this.parentElement.remove(); currentMembersCount--;" style="position:absolute; right:12px; top:12px; background:none; border:none; color:#ff4444; cursor:pointer; font-size: 1.2rem; transition: 0.3s; opacity: 0.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">✕</button>` : '';
+
+            memberDiv.innerHTML = `
+                ${removeBtn}
+                <div style="color: var(--gold); font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; margin-bottom: 0.8rem; opacity: 0.6; letter-spacing: 0.1em; text-transform: uppercase;">— Participant ${currentMembersCount + 1} —</div>
+                <div class="form-group"><label>Member Name</label><input type="text" class="tm-name" required placeholder="Name"></div>
+                <div class="form-group"><label>Member Email</label><input type="email" class="tm-email" required placeholder="Email"></div>
+                <div class="form-group"><label>Member USN</label><input type="text" class="tm-usn" required placeholder="USN"></div>
+                <div class="form-group"><label>Member College</label><input type="text" class="tm-college" required placeholder="College"></div>
+            `;
+            container.appendChild(memberDiv);
+        }
+
+        function openRegForm(eventId) {
+            const ev = events.find(e => e.id === eventId);
+            currentEventMaxMembers = ev.maxMembers || 1;
+            currentMembersCount = 0;
+
+            document.getElementById('reg-form-title').innerText = `Register for ${ev.norse}`;
+            document.getElementById('reg-event-id').value = ev.id;
+            document.getElementById('reg-event-name').value = ev.norse;
+            document.getElementById('registration-form').reset();
+
+            const teamSection = document.getElementById('team-members-section');
+            const teamContainer = document.getElementById('team-members-container');
+            const addMemberBtn = document.getElementById('add-member-btn');
+
+            if (teamContainer) teamContainer.innerHTML = '';
+
+            if (STRICT_TEAM_EVENTS[eventId]) {
+                const totalRequired = STRICT_TEAM_EVENTS[eventId];
+                const membersToAdd = totalRequired - 1;
+                for (let i = 0; i < membersToAdd; i++) {
+                    addTeamMemberBlock(false);
+                }
+                if (teamSection) teamSection.style.display = 'block';
+                if (addMemberBtn) addMemberBtn.style.display = 'none';
+            } else if (currentEventMaxMembers > 1) {
+                if (teamSection) teamSection.style.display = 'block';
+                if (addMemberBtn) addMemberBtn.style.display = 'inline-block';
+            } else {
+                if (teamSection) teamSection.style.display = 'none';
+            }
+
+            // Show/Hide E-Games options
+            const egameSection = document.getElementById('egame-choice-section');
+            if (eventId === 'valhalla') {
+                egameSection.style.display = 'block';
+            } else {
+                egameSection.style.display = 'none';
+            }
+
+            // Close main event modal
+            document.getElementById('modal-overlay').classList.remove('active');
+
+            // Open Reg Form
+            document.getElementById('reg-form-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        const addMemberButton = document.getElementById('add-member-btn');
+        if (addMemberButton) {
+            addMemberButton.addEventListener('click', () => {
+                if (currentMembersCount >= currentEventMaxMembers - 1) {
+                    alert(`Maximum team size is ${currentEventMaxMembers} (including Team Lead).`);
+                    return;
+                }
+                addTeamMemberBlock(true);
+            });
+        }
+
+        function closeRegForm() {
+            document.getElementById('reg-form-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('registration-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('reg-submit-btn');
+
+            const fileInput = document.getElementById('reg-screenshot');
+            if (fileInput.files.length === 0) {
+                alert('Please select a payment screenshot.');
+                return;
+            }
+            const file = fileInput.files[0];
+            if (file.size > 25 * 1024 * 1024) {
+                alert('Screenshot must be less than 25MB.');
+                return;
+            }
+
+            btn.classList.add('btn-loading');
+            btn.innerText = 'Submitting...';
+
+            const reader = new FileReader();
+            reader.onload = async function (eReader) {
+                const base64Data = eReader.target.result.split(',')[1];
+
+                const tmNames = document.querySelectorAll('.tm-name');
+                const tmEmails = document.querySelectorAll('.tm-email');
+                const tmUsns = document.querySelectorAll('.tm-usn');
+                const tmColleges = document.querySelectorAll('.tm-college');
+
+                const teamMembers = [];
+                for (let i = 0; i < tmNames.length; i++) {
+                    teamMembers.push({
+                        name: tmNames[i].value,
+                        email: tmEmails[i].value,
+                        usn: tmUsns[i].value,
+                        college: tmColleges[i].value
+                    });
+                }
+
+                const formData = {
+                    eventName: document.getElementById('reg-event-name').value,
+                    eventId: document.getElementById('reg-event-id').value,
+                    name: document.getElementById('reg-name').value,
+                    phone: document.getElementById('reg-phone').value,
+                    email: document.getElementById('reg-email').value,
+                    usn: document.getElementById('reg-usn').value,
+                    college: document.getElementById('reg-college').value,
+                    city: document.getElementById('reg-city').value,
+                    gameChoice: document.getElementById('reg-event-id').value === 'valhalla' ? document.getElementById('reg-game-choice').value : 'N/A',
+                    utr: document.getElementById('reg-utr').value,
+                    screenshotName: file.name,
+                    screenshotMime: file.type,
+                    paymentScreenshotData: base64Data,
+                    teamMembers: teamMembers
+                };
+
+                try {
+                    if (GOOGLE_APP_SCRIPT_URL === 'YOUR_GOOGLE_APP_SCRIPT_URL_HERE') {
+                        // Simulation Mode for preview if script url not set
+                        setTimeout(() => {
+                            markRegistered(formData.eventId);
+                            alert('Registration successful! (Simulation Mode)');
+                            closeRegForm();
+                            btn.classList.remove('btn-loading');
+                            btn.innerText = 'Submit Registration';
+                        }, 1500);
+                        return;
+                    }
+
+                    const response = await fetch(GOOGLE_APP_SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(formData),
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' } // 'text/plain' to bypass CORS preflight issues on Google Scripts
+                    });
+
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        markRegistered(formData.eventId);
+                        alert('Registration completed successfully! Welcome to the Arena.');
+                        closeRegForm();
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                } catch (error) {
+                    alert('Network error during registration. Please try again.');
+                    console.error(error);
+                } finally {
+                    btn.classList.remove('btn-loading');
+                    btn.innerText = 'Submit Registration';
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+
         // Rulebook panel
         function openRulebook(norseName) {
             document.getElementById('rulebook-title').textContent = norseName + ' — Rulebook';
-            // For now use shared placeholder; later swap to Rules/${id}.png
-            document.getElementById('rulebook-img').src = 'Rules/placeholder.png';
-            document.getElementById('rulebook-img').style.display = 'block';
+            const viewer = document.getElementById('rulebook-viewer');
+            // Set the PDF source
+            viewer.src = 'Rules/SAM-26-Rulebook.pdf';
             document.getElementById('rulebook-panel').classList.add('active');
         }
 
@@ -3298,9 +3793,6 @@
     </script>
     <script src="Js/loader.js"></script>
     <script src="Js/mobile-fix.js"></script>
-    <!-- Static popup system + registration fallback -->
-    <script src="Js/popup.js"></script>
-    <script src="Js/register.js"></script>
 
 </body>
 

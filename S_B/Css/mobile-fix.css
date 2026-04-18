@@ -165,26 +165,11 @@ html {
     #welcome-norse {
         padding-left: 1rem;
         padding-right: 1rem;
-        padding-top: 60px;
-        padding-bottom: 60px;
-        min-height: auto;
-    }
-
-    /* Center the Yggdrasil background image on mobile */
-    #welcome-norse::before {
-        background-size: 70%;
-        background-position: center center;
     }
 
     .welcome-container {
         max-width: 100%;
         overflow: hidden;
-    }
-
-    .welcome-text {
-        font-size: 1.1rem;
-        line-height: 1.7;
-        padding: 0 0.25rem;
     }
 
     /* ------------------------------------------------------------------
@@ -477,9 +462,9 @@ html {
         letter-spacing: clamp(0.05em, 1vw, 0.15em);
     }
 
-    /* Arena grid single column for very small screens */
+    /* Arena grid: 2 columns, 4 rows for 8 events */
     .arena-grid {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 
     .arena-grid-center-row .event-card {
