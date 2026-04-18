@@ -2837,13 +2837,14 @@
 
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" id="reg-name" required placeholder="Your Full Name" 
-                           pattern="^[a-zA-Z\s]+$" title="Name should only contain letters and spaces">
+                    <input type="text" id="reg-name" required placeholder="Your Full Name" pattern="^[a-zA-Z\s]+$"
+                        title="Name should only contain letters and spaces">
                 </div>
                 <div class="form-group">
                     <label>Phone Number</label>
                     <input type="text" id="reg-phone" required placeholder="10-digit Number (not starting with 0)"
-                           maxlength="10" pattern="^[1-9][0-9]{9}$" title="Phone number must be 10 digits and cannot start with 0">
+                        maxlength="10" pattern="^[1-9][0-9]{9}$"
+                        title="Phone number must be 10 digits and cannot start with 0">
                 </div>
                 <div class="form-group">
                     <label>Email</label>
@@ -2855,13 +2856,13 @@
                 </div>
                 <div class="form-group">
                     <label>College Name</label>
-                    <input type="text" id="reg-college" required placeholder="SSIT / Other"
-                           maxlength="75" style="text-transform: uppercase;">
+                    <input type="text" id="reg-college" required placeholder="SSIT / Other" maxlength="75"
+                        style="text-transform: uppercase;">
                 </div>
                 <div class="form-group">
                     <label>City</label>
-                    <input type="text" id="reg-city" required placeholder="Your City"
-                           maxlength="75" style="text-transform: uppercase;">
+                    <input type="text" id="reg-city" required placeholder="Your City" maxlength="75"
+                        style="text-transform: uppercase;">
                 </div>
 
                 <!-- E-GAMES OPTION -->
@@ -2892,8 +2893,8 @@
 
                 <div class="form-group">
                     <label>UTR Number</label>
-                    <input type="text" id="reg-utr" required placeholder="12-digit UTR"
-                           maxlength="12" pattern="^[0-9]{12}$" title="UTR must be exactly 12 digits">
+                    <input type="text" id="reg-utr" required placeholder="12-digit UTR" maxlength="12"
+                        pattern="^[0-9]{12}$" title="UTR must be exactly 12 digits">
                 </div>
                 <div class="form-group">
                     <label>Payment Screenshot <span class="file-upload-lbl">(Max 25MB)</span></label>
@@ -3283,7 +3284,7 @@
             upperFields.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
-                    el.addEventListener('input', function() {
+                    el.addEventListener('input', function () {
                         this.value = this.value.toUpperCase();
                     });
                 }
@@ -3299,12 +3300,12 @@
             // Prevent numbers in Name fields
             document.addEventListener('input', e => {
                 const target = e.target;
-                
+
                 // Name validation
                 if (target.id === 'reg-name' || target.classList.contains('tm-name')) {
                     target.value = target.value.replace(/[^a-zA-Z\s]/g, '');
                 }
-                
+
                 // Phone validation (numeric only, no leading zero, max 10)
                 if (target.id === 'reg-phone') {
                     target.value = target.value.replace(/\D/g, ''); // Numeric only
@@ -3312,7 +3313,7 @@
                         target.value = target.value.substring(1); // Remove leading zero
                     }
                 }
-                
+
                 // UTR validation (numeric only, max 12)
                 if (target.id === 'reg-utr') {
                     target.value = target.value.replace(/\D/g, ''); // Numeric only
