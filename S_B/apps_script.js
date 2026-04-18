@@ -75,34 +75,56 @@ function doPost(e) {
 
     // 3. Send Confirmation Emails (Norse Themed HTML)
     const subject = `🛡️ Samarthya 2026: Registration Confirmed - ${eventName}`;
-    
-    const htmlTemplate = (recipientName) => `
-      <div style="background-color: #050d1a; color: #e8f4f8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; border: 2px solid #c8a84b; max-width: 600px; margin: auto; box-shadow: 0 0 20px rgba(200, 168, 75, 0.2);">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #c8a84b; font-family: 'Georgia', serif; letter-spacing: 4px; border-bottom: 1px solid rgba(200, 168, 75, 0.3); padding-bottom: 10px; text-transform: uppercase;">Samarthya 2026</h1>
-          <p style="color: #00d4ff; font-family: monospace; letter-spacing: 2px;">ᚠᚢᚦᚨᚱᚲ · FORGE OF INNOVATION · ᚠᚢᚦᚨᚱᚲ</p>
+
+
+
+    const htmlTemplate = (recipientName) => {
+      const gameInfo = (gameChoice && gameChoice !== 'N/A') ? `
+        <div style="margin-top: 10px; color: #00d4ff; font-family: monospace; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
+          Battleground: ${gameChoice}
+        </div>` : '';
+
+      return `
+      <div style="background-color: #050d1a; color: #e8f4f8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; border: 1px solid #c8a84b; max-width: 600px; margin: auto; overflow: hidden;">
+        <!-- Header Banner -->
+        <div style="background: linear-gradient(135deg, #0a1628, #050d1a); padding: 40px 20px; text-align: center; border-bottom: 2px solid #c8a84b;">
+          <h1 style="color: #c8a84b; font-family: 'Georgia', serif; letter-spacing: 6px; margin: 0; text-transform: uppercase; font-size: 32px; text-shadow: 0 0 15px rgba(200, 168, 75, 0.5);">Samarthya 2026</h1>
+          <div style="color: #00d4ff; font-family: monospace; font-size: 10px; letter-spacing: 4px; margin-top: 10px;">ᚠᚢᚦᚨᚱᚲ · FORGE OF INNOVATION · ᚠᚢᚦᚨᚱᚲ</div>
         </div>
         
-        <div style="line-height: 1.6; font-size: 16px;">
-          <p>Hail <strong style="color: #c8a84b;">${recipientName}</strong>,</p>
-          <p>Your registration for the trial of <strong>${eventName}</strong> has been received and sanctioned by the council of innovators.</p>
+        <!-- Content Area -->
+        <div style="padding: 40px 30px; background-image: radial-gradient(circle at 50% 50%, rgba(200, 168, 75, 0.05) 0%, transparent 80%);">
+          <p style="font-size: 18px; color: #c8a84b; font-family: 'Georgia', serif;">Hail ${recipientName},</p>
           
-          <div style="background: rgba(200, 168, 75, 0.1); border-left: 4px solid #c8a84b; padding: 20px; margin: 25px 0;">
-            <p style="margin: 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Registration ID</p>
-            <p style="margin: 5px 0 0 0; color: #c8a84b; font-size: 24px; font-weight: bold; letter-spacing: 2px;">${regId}</p>
+          <p style="line-height: 1.8; font-size: 15px; color: #d8e4e8;">
+            Your registration for the trial of <strong style="color: #00d4ff;">${eventName}</strong> has been secured in the archives of the Nine Realms.
+          </p>
+          
+          ${gameInfo}
+
+          <!-- Registration ID Box -->
+          <div style="background: rgba(200, 168, 75, 0.05); border: 1px dashed rgba(200, 168, 75, 0.3); padding: 25px; margin: 30px 0; text-align: center; position: relative;">
+            <div style="font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px;">Your Runic Event ID</div>
+            <div style="font-size: 28px; color: #c8a84b; font-weight: bold; letter-spacing: 4px; font-family: 'Courier New', Courier, monospace;">${regId}</div>
           </div>
 
-          <p>Prepare yourself, for the gates of the Arena shall soon open. May the Norns weave a prosperous fate for your journey in Samarthya 2026.</p>
+          <p style="line-height: 1.8; font-size: 15px; color: #d8e4e8;">
+            Prepare yourself, for the gates of the <strong style="color: #c8a84b;">Arena</strong> shall open on April 22nd. May your skills be sharp and your code be legendary. 
+          </p>
           
-          <p style="margin-top: 40px; font-style: italic; color: rgba(232, 244, 248, 0.6);">"Only those with the heart of a warrior and the mind of a craftsman shall leave their mark upon the Sagas."</p>
+          <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(200, 168, 75, 0.1); font-style: italic; color: rgba(232, 244, 248, 0.5); font-size: 13px; text-align: center;">
+            "Wait for the signal. The gods favor the bold."
+          </div>
         </div>
         
-        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(200, 168, 75, 0.2); text-align: center; font-size: 12px; color: rgba(232, 244, 248, 0.4);">
-          <p>© 2026 IEEE SSIT Student Branch · SSIT, Tumakuru</p>
-          <p>ᚠᚢᚦᚨᚱᚲ · ᚷᛟᚱᚷᛖ · ᛟᚠ · ᛁᚾᚾᛟᚠᚨᛏᛁᛟᚾ</p>
+        <!-- Footer -->
+        <div style="background-color: #030810; padding: 20px; text-align: center; font-size: 11px; color: rgba(232, 244, 248, 0.3); border-top: 1px solid rgba(200, 168, 75, 0.2);">
+          <p style="margin: 5px 0; letter-spacing: 1px;">IEEE SSIT Student Branch · SSIT, Tumakuru</p>
+          <p style="margin: 5px 0;">22 & 23 April 2026</p>
         </div>
       </div>
     `;
+    };
 
     try {
       const emailOptions = (name) => ({
