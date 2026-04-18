@@ -2864,7 +2864,7 @@
                 <div class="form-group">
                     <label>Phone Number</label>
                     <input type="text" id="reg-phone" required placeholder="10-digit Number (not starting with 0)"
-                           pattern="^[1-9][0-9]{9}$" title="Phone number must be 10 digits and cannot start with 0">
+                           maxlength="10" pattern="^[1-9][0-9]{9}$" title="Phone number must be 10 digits and cannot start with 0">
                 </div>
                 <div class="form-group">
                     <label>Email</label>
@@ -2914,7 +2914,7 @@
                 <div class="form-group">
                     <label>UTR Number</label>
                     <input type="text" id="reg-utr" required placeholder="12-digit UTR"
-                           pattern="^[0-9]{12}$" title="UTR must be exactly 12 digits">
+                           maxlength="12" pattern="^[0-9]{12}$" title="UTR must be exactly 12 digits">
                 </div>
                 <div class="form-group">
                     <label>Payment Screenshot <span class="file-upload-lbl">(Max 25MB)</span></label>
@@ -3334,8 +3334,24 @@
 
             // Prevent numbers in Name fields
             document.addEventListener('input', e => {
-                if (e.target.id === 'reg-name' || e.target.classList.contains('tm-name')) {
-                    e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+                const target = e.target;
+                
+                // Name validation
+                if (target.id === 'reg-name' || target.classList.contains('tm-name')) {
+                    target.value = target.value.replace(/[^a-zA-Z\s]/g, '');
+                }
+                
+                // Phone validation (numeric only, no leading zero, max 10)
+                if (target.id === 'reg-phone') {
+                    target.value = target.value.replace(/\D/g, ''); // Numeric only
+                    if (target.value.startsWith('0')) {
+                        target.value = target.value.substring(1); // Remove leading zero
+                    }
+                }
+                
+                // UTR validation (numeric only, max 12)
+                if (target.id === 'reg-utr') {
+                    target.value = target.value.replace(/\D/g, ''); // Numeric only
                 }
             });
         }
