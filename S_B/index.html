@@ -3211,7 +3211,6 @@
 
         const STRICT_TEAM_EVENTS = {
             'helheim': 3, // Escape Room
-            'valhalla': 4, // E Games
             'bifrost': 4   // Treasure Hunt
         };
 
@@ -3267,6 +3266,12 @@
                 if (teamSection) teamSection.style.display = 'block';
                 if (addMemberBtn) addMemberBtn.style.display = 'none';
             } else if (currentEventMaxMembers > 1) {
+                if (ev.minMembers && ev.minMembers > 1) {
+                    const requiredToAdd = ev.minMembers - 1;
+                    for (let i = 0; i < requiredToAdd; i++) {
+                        addTeamMemberBlock(false);
+                    }
+                }
                 if (teamSection) teamSection.style.display = 'block';
                 if (addMemberBtn) addMemberBtn.style.display = 'inline-block';
             } else {
