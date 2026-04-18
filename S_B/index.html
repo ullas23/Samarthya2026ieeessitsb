@@ -2891,6 +2891,13 @@
                     <div id="team-members-container"></div>
                 </div>
 
+                <div class="amount-display-container" style="text-align: center; margin: 1.5rem 0 1rem;">
+                    <div class="amount-box" style="display: inline-block; border: 1px dashed rgba(200, 168, 75, 0.5); padding: 0.8rem 2.5rem; border-radius: 8px; background: linear-gradient(135deg, rgba(20,25,35,0.8), rgba(10,15,25,0.9)); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                        <span style="font-family: 'Share Tech Mono', monospace; color: rgba(232, 244, 248, 0.6); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 0.4rem;">Registration Fee</span>
+                        <span id="reg-amount-display" style="font-family: 'Cinzel Decorative', serif; color: var(--gold); font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 15px rgba(200,168,75,0.3);">₹0</span>
+                    </div>
+                </div>
+
                 <div class="qr-display">
                     <img src="Assets/QR.png" alt="Payment QR">
                 </div>
@@ -3228,6 +3235,9 @@
             document.getElementById('reg-event-id').value = ev.id;
             document.getElementById('reg-event-name').value = ev.norse;
             document.getElementById('registration-form').reset();
+            
+            // Set Dynamic Amount Display
+            document.getElementById('reg-amount-display').innerText = '₹' + (ev.amount || 0);
 
             const teamSection = document.getElementById('team-members-section');
             const teamContainer = document.getElementById('team-members-container');
@@ -3423,7 +3433,7 @@
             document.getElementById('rulebook-title').textContent = norseName + ' — Rulebook';
             document.getElementById('rulebook-fallback').style.display = 'none';
             document.getElementById('rulebook-img').style.display = 'block';
-            document.getElementById('rulebook-img').src = 'Rules/' + eventId + '.png';
+            document.getElementById('rulebook-img').src = 'Rules/' + eventId + '.png?v=' + new Date().getTime();
             document.getElementById('rulebook-panel').classList.add('active');
         }
 
