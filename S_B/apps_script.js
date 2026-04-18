@@ -48,7 +48,7 @@ function doPost(e) {
     if (!sheet) {
       sheet = doc.insertSheet(SHEET_NAME);
       sheet.appendRow([
-        'Timestamp', 'Reg ID', 'Event', 'Game Choice', 'Lead Name', 'Lead Phone', 'Lead Email', 'Lead USN', 'Lead College', 'City', 'UTR', 'Screenshot URL',
+        'Timestamp', 'Reg ID', 'Event', 'Game', 'Lead Name', 'Lead Phone', 'Lead Email', 'Lead USN', 'Lead College', 'City', 'UTR', 'Screenshot URL',
         'Member 2 Name', 'Member 2 Email', 'Member 2 USN', 'Member 2 College',
         'Member 3 Name', 'Member 3 Email', 'Member 3 USN', 'Member 3 College',
         'Member 4 Name', 'Member 4 Email', 'Member 4 USN', 'Member 4 College'

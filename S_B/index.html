@@ -1102,12 +1102,14 @@
 
         /* MODAL IMAGE */
         .modal-illustration {
-            width: 100%;
+            width: 80%;
             height: clamp(140px, 25vw, 220px);
             object-fit: cover;
             border: 1px solid rgba(200, 168, 75, 0.15);
             margin-bottom: 1.5rem;
             display: block;
+            margin-left: auto;
+            margin-right: auto;
             filter: brightness(0.9) contrast(1.05);
         }
 
@@ -1916,24 +1918,6 @@
             transform: scale(1);
         }
 
-        .modal-rune-ring {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(60px, 10vw, 80px);
-            height: clamp(60px, 10vw, 80px);
-            border: 2px solid var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--midnight);
-            font-family: 'Cinzel Decorative', serif;
-            font-size: clamp(1.2rem, 2vw, 1.5rem);
-            color: var(--gold);
-            box-shadow: 0 0 30px var(--gold-glow);
-        }
 
         .modal-img {
             width: 100%;
@@ -2269,12 +2253,7 @@
                 margin-bottom: 2rem;
             }
 
-            .modal-rune-ring {
-                width: 56px;
-                height: 56px;
-                top: -28px;
-                font-size: 1rem;
-            }
+
 
 
 
@@ -2795,7 +2774,7 @@
     <!-- EVENT MODAL -->
     <div id="modal-overlay">
         <div class="modal-box">
-            <div class="modal-rune-ring" id="modal-rune">ᚠ</div>
+
             <button class="modal-close" id="modal-close">✕</button>
             <div id="modal-img-wrap"></div>
             <div class="modal-header-row">
@@ -3042,23 +3021,8 @@
                 return;
             }
 
-            if (arenaKey === 'ragnarok') {
-                // First 4 in a 4-col grid, last 3 centered
-                const topGrid = document.createElement('div');
-                topGrid.className = 'arena-grid';
-                const bottomRow = document.createElement('div');
-                bottomRow.className = 'arena-grid-center-row';
 
-                arenaEvents.forEach((ev, i) => {
-                    const card = createEventCard(ev, i);
-                    if (i < 4) topGrid.appendChild(card);
-                    else bottomRow.appendChild(card);
-                });
 
-                container.appendChild(topGrid);
-                container.appendChild(bottomRow);
-                return;
-            }
 
             // Default: 4-col grid (Awakening)
             const grid = document.createElement('div');
@@ -3178,7 +3142,7 @@
             }
             document.getElementById('modal-common').textContent = '[ ' + ev.common + ' ]';
             document.getElementById('modal-desc').textContent = ev.desc;
-            document.getElementById('modal-rune').textContent = ev.rune;
+
 
             // Illustration image
             const imgWrap = document.getElementById('modal-img-wrap');
