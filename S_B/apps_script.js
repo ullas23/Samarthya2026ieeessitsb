@@ -86,15 +86,20 @@ function doPost(e) {
 
       return `
       <div style="background-color: #050d1a; color: #e8f4f8; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; border: 1px solid #c8a84b; max-width: 600px; margin: auto; overflow: hidden;">
+        <!-- Font Import (Note: Some email clients may not support web fonts) -->
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@700&display=swap');
+        </style>
+        
         <!-- Header Banner -->
-        <div style="background: linear-gradient(135deg, #0a1628, #050d1a); padding: 40px 20px; text-align: center; border-bottom: 2px solid #c8a84b;">
-          <h1 style="color: #c8a84b; font-family: 'Georgia', serif; letter-spacing: 6px; margin: 0; text-transform: uppercase; font-size: 32px; text-shadow: 0 0 15px rgba(200, 168, 75, 0.5);">Samarthya 2026</h1>
-          <div style="color: #00d4ff; font-family: monospace; font-size: 10px; letter-spacing: 4px; margin-top: 10px;">ᚠᚢᚦᚨᚱᚲ · FORGE OF INNOVATION · ᚠᚢᚦᚨᚱᚲ</div>
+        <div style="background: linear-gradient(135deg, #0a1628, #050d1a); padding: 45px 20px; text-align: center; border-bottom: 2px solid #c8a84b;">
+          <h1 style="color: #c8a84b; font-family: 'Cinzel Decorative', 'Georgia', serif; letter-spacing: 5px; margin: 0; text-transform: uppercase; font-size: 36px; text-shadow: 0 0 15px rgba(200, 168, 75, 0.4); font-weight: 700;">Samarthya 2026</h1>
+          <div style="color: #00d4ff; font-family: 'Cinzel', 'Courier New', monospace; font-size: 10px; letter-spacing: 4px; margin-top: 12px; font-weight: 700;">ᚠᚢᚦᚨᚱᚲ · FORGE OF INNOVATION · ᚠᚢᚦᚨᚱᚲ</div>
         </div>
         
         <!-- Content Area -->
-        <div style="padding: 40px 30px; background-image: radial-gradient(circle at 50% 50%, rgba(200, 168, 75, 0.05) 0%, transparent 80%);">
-          <p style="font-size: 18px; color: #c8a84b; font-family: 'Georgia', serif;">Hail ${recipientName},</p>
+        <div style="padding: 40px 35px; background-image: radial-gradient(circle at 50% 50%, rgba(200, 168, 75, 0.04) 0%, transparent 80%);">
+          <p style="font-size: 20px; color: #c8a84b; font-family: 'Cinzel', 'Georgia', serif; margin-bottom: 25px;">Hail ${recipientName},</p>
           
           <p style="line-height: 1.8; font-size: 15px; color: #d8e4e8;">
             Your registration for the trial of <strong style="color: #00d4ff;">${eventName}</strong> has been secured in the archives of the Nine Realms.
