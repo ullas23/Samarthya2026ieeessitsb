@@ -1148,15 +1148,16 @@
 
         .rulebook-manuscript {
             position: relative;
-            max-width: 800px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
+            max-width: 1000px;
+            width: 95%;
+            height: 90vh;
             background: linear-gradient(180deg, rgba(15, 20, 35, 0.98), rgba(8, 14, 28, 0.99));
             border: 2px solid rgba(200, 168, 75, 0.3);
             box-shadow: 0 0 60px rgba(200, 168, 75, 0.08), 0 0 120px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.3);
-            padding: clamp(1.5rem, 4vw, 3rem);
+            padding: clamp(1rem, 3vw, 2rem);
             clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+            display: flex;
+            flex-direction: column;
         }
 
         .rulebook-title {
@@ -1168,13 +1169,12 @@
             margin-bottom: 1.5rem;
         }
 
-        .rulebook-img {
+        .rulebook-viewer {
             width: 100%;
-            max-height: 60vh;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-            border: 1px solid rgba(200, 168, 75, 0.1);
+            flex: 1;
+            border: 1px solid rgba(200, 168, 75, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
         }
 
         .rulebook-back {
@@ -2812,8 +2812,11 @@
         <div class="rulebook-manuscript">
             <button class="rulebook-back" id="rulebook-back">← Back</button>
             <div class="rulebook-title" id="rulebook-title">Rulebook</div>
-            <img src="Rules/placeholder.png" alt="Event Rulebook" class="rulebook-img" id="rulebook-img"
-                onerror="this.style.display='none';this.parentElement.insertAdjacentHTML('beforeend','<p style=\'text-align:center;color:rgba(232,244,248,0.5);padding:3rem;font-family:Rajdhani,sans-serif;\'>Rulebook coming soon...</p>');">
+            <iframe id="rulebook-viewer" class="rulebook-viewer" src=""></iframe>
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="Rules/SAM-26-Rulebook.pdf" target="_blank" class="btn-rune btn-rune-outline"
+                    style="font-size: 0.75rem; padding: 0.6rem 1.5rem; display: inline-block; text-decoration: none;">Open in New Tab</a>
+            </div>
         </div>
     </div>
 
@@ -3379,9 +3382,9 @@
         // Rulebook panel
         function openRulebook(norseName) {
             document.getElementById('rulebook-title').textContent = norseName + ' — Rulebook';
-            // For now use shared placeholder; later swap to Rules/${id}.png
-            document.getElementById('rulebook-img').src = 'Rules/placeholder.png';
-            document.getElementById('rulebook-img').style.display = 'block';
+            const viewer = document.getElementById('rulebook-viewer');
+            // Set the PDF source
+            viewer.src = 'Rules/SAM-26-Rulebook.pdf';
             document.getElementById('rulebook-panel').classList.add('active');
         }
 
